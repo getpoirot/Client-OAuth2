@@ -11,11 +11,20 @@
     ]
     , "require": {
       "poirot/api-client": "dev-devel"
+      , "poirot/std": "dev-devel"
+      , "psr/http-message": "1.0"
+    }
+    , "suggest": {
+      "poirot/psr7-http": "PSR-7 HTTP Implementation."
     }
     , "autoload"  : {
         "psr-4": {
             "Poirot\\OAuth2Client\\": "src/"
+          , "Module\\OAuth2Client\\": "mod/"
         }
+        , "files": [
+            "src/_functions.php"
+        ]
     }
     ,"repositories": [
       { "type": "git" ,"url": "https://github.com/phPoirot/Client-OAuth2.git" }
