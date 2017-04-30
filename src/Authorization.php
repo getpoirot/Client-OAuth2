@@ -4,6 +4,7 @@ namespace Poirot\OAuth2Client;
 use Poirot\ApiClient\aClient;
 use Poirot\ApiClient\Interfaces\iClient;
 use Poirot\ApiClient\Interfaces\iPlatform;
+use Poirot\OAuth2\Server\Grant\aGrant;
 use Poirot\OAuth2Client\Grant\aGrantRequest;
 use Poirot\OAuth2Client\Interfaces\iAccessToken;
 
@@ -25,11 +26,11 @@ class Authorization
      * - look in grants available with response_type code
      * - make url from grant parameters
      *
-     * @param null|aGrantRequest $grant Using specific grant
+     * @param aGrantRequest $grant Using specific grant
      *
      * @return string Authorization URL
      */
-    function attainAuthorizationUrl(aGrantRequest $grant = null)
+    function attainAuthorizationUrl(aGrantRequest $grant)
     {
         // Look For Grant Registered With Authorization Code
         // Build Query Params From Grant
@@ -47,6 +48,19 @@ class Authorization
     function attainAccessToken(aGrantRequest $grant)
     {
         // TODO Implement Retrieve Token
+    }
+
+    /**
+     * Retrieve Specific Grant Type
+     *
+     * @param string $grantTypeName
+     * @param array  $overrideOptions
+     *
+     * @return aGrant
+     */
+    function withGrant($grantTypeName, array $overrideOptions = null)
+    {
+
     }
 
 

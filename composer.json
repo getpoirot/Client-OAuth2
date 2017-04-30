@@ -12,6 +12,7 @@
     , "require": {
       "poirot/api-client": "dev-devel"
       , "poirot/std": "dev-devel"
+      , "poirot/ioc": "dev-devel"
       , "psr/http-message": "1.0"
     }
     , "suggest": {
