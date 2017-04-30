@@ -1,11 +1,13 @@
 <?php
 namespace Poirot\OAuth2Client\Grant;
 
-use Poirot\Std\Struct\aDataOptions;
+use Poirot\OAuth2Client\Exception\exGrantRequestNotImplemented;
+use Poirot\OAuth2Client\Exception\exMissingGrantRequestParams;
+use Poirot\Std\ConfigurableSetter;
 
 
 abstract class aGrantRequest
-    extends aDataOptions
+    extends ConfigurableSetter
 {
     protected $clientId;
     protected $scopes = [];
@@ -19,18 +21,41 @@ abstract class aGrantRequest
     abstract function getGrantType();
 
     /**
-     * Is Required Property Full Filled?
-     * @ignore ignore this as option
-     *
-     * !! this method can override on classes that extend this
-     *
-     * @param null|string $property_key
+     * Can Respond To Authorization Request
      *
      * @return bool
      */
-    function isFulfilled($property_key = null)
+    abstract function canRespondToAuthorize();
+
+    /**
+     * Can Respond To Access Token Request
+     *
+     * @return bool
+     */
+    abstract function canRespondToToken();
+
+    /**
+     * Assert Parameters and Give Request Parameters
+     *
+     * @return array
+     * @throws exMissingGrantRequestParams
+     * @throws exGrantRequestNotImplemented
+     */
+     function assertAuthorizeParameters()
+     {
+         throw new exGrantRequestNotImplemented;
+     }
+
+    /**
+     * Assert Parameters and Give Request Parameters
+     *
+     * @return array
+     * @throws exMissingGrantRequestParams
+     * @throws exGrantRequestNotImplemented
+     */
+    function assertTokenParameters()
     {
-        return parent::isFulfilled($property_key);
+        throw new exGrantRequestNotImplemented;
     }
 
 
@@ -65,5 +90,17 @@ abstract class aGrantRequest
     function getScopes()
     {
         return $this->scopes;
+    }
+
+
+    //
+
+    /**
+     * @override ensure not throw exception
+     * @inheritdoc
+     */
+    function with(array $options, $throwException = false)
+    {
+        return parent::with($options, $throwException);
     }
 }

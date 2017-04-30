@@ -6,6 +6,7 @@ use Poirot\ApiClient\Interfaces\iClient;
 use Poirot\ApiClient\Interfaces\iPlatform;
 use Poirot\OAuth2\Server\Grant\aGrant;
 use Poirot\OAuth2Client\Grant\aGrantRequest;
+use Poirot\OAuth2Client\Grant\Container\GrantPlugins;
 use Poirot\OAuth2Client\Interfaces\iAccessToken;
 
 // TODO Implement Grants Registry
@@ -16,6 +17,11 @@ class Authorization
     protected $urlAuthorize;
     protected $urlToken;
     protected $defaultScopes = [];
+    protected $clientId;
+    protected $clientSecret;
+
+    /** @var GrantPlugins */
+    protected $grantPlugins;
 
 
     // OAuth Authorization
@@ -29,13 +35,27 @@ class Authorization
      * @param aGrantRequest $grant Using specific grant
      *
      * @return string Authorization URL
+     * @throws \Exception
      */
     function attainAuthorizationUrl(aGrantRequest $grant)
     {
-        // Look For Grant Registered With Authorization Code
-        // Build Query Params From Grant
-        // Append To BaseUrl Authorize
+        if (! $grant->canRespondToAuthorize() )
+            throw new \Exception(sprintf(
+                'Grant (%s) Cant Respond To Authorization Request.'
+                , $grant->getGrantType()
+            ));
 
+
+        # Build Authorize Url
+
+        $grantParams = $grant->assertAuthorizeParameters();
+
+        $authUrl = appendQuery(
+            $this->getUrlAuthorize()
+            , buildQueryString($grantParams)
+        );
+
+        return $authUrl;
     }
 
     /**
@@ -44,23 +64,42 @@ class Authorization
      * @param aGrantRequest $grant
      *
      * @return iAccessToken
+     * @throws \Exception
      */
     function attainAccessToken(aGrantRequest $grant)
     {
-        // TODO Implement Retrieve Token
+        // client_id, secret_key can send as Authorization Header Or Post Request Body
     }
 
     /**
      * Retrieve Specific Grant Type
+     *
+     *
+     * example code:
+     *
+     * $auth->withGrant(
+     *  GrantPlugins::AUTHORIZATION_CODE
+     *  , ['state' => 'custom_state'] )
      *
      * @param string $grantTypeName
      * @param array  $overrideOptions
      *
      * @return aGrant
      */
-    function withGrant($grantTypeName, array $overrideOptions = null)
+    function withGrant($grantTypeName, array $overrideOptions = [])
     {
+        $options = [
+            'scopes'        => $this->getDefaultScopes(),
+            'client_id'     => $this->getClientId(),
+            'client_secret' => $this->getClientSecret(),
+        ];
 
+        if (! empty($overrideOptions) )
+            $options = array_merge($options, $overrideOptions);
+
+
+        $grant = $this->_grantPlugins()->fresh($grantTypeName, $options);
+        return $grant;
     }
 
 
@@ -106,6 +145,36 @@ class Authorization
         return $this->urlToken;
     }
 
+
+    // Grant Default Options
+
+    function setClientId($clientId)
+    {
+        $this->clientId = (string) $clientId;
+        return $this;
+    }
+
+    function getClientId()
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * Client Secret Key
+     * @param string $clientSecret
+     * @return Authorization
+     */
+    function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+        return $this;
+    }
+
+    function getClientSecret()
+    {
+        return $this->clientSecret;
+    }
+
     /**
      * Default Token Request Scopes
      * @param array $defaultScopes
@@ -140,5 +209,16 @@ class Authorization
     function platform()
     {
         // TODO: Implement platform() method.
+    }
+
+
+    // ..
+
+    protected function _grantPlugins()
+    {
+        if (! $this->grantPlugins )
+            $this->grantPlugins = new GrantPlugins;
+
+        return $this->grantPlugins;
     }
 }
