@@ -1,0 +1,23 @@
+{
+    "name": "poirot/client-oauth2"
+    , "description": "Provides a simple and clean Abstraction for Integration with OAuth 2.0 Server Providers."
+    , "type"       : "library"
+    , "authors": [
+        {
+            "name": "Payam Naderi"
+            , "email": "naderi.payam@gmail.com"
+            , "role": "Developer"
+        }
+    ]
+    , "require": {
+      "poirot/api-client": "dev-devel"
+    }
+    , "autoload"  : {
+        "psr-4": {
+            "Poirot\\OAuth2Client\\": "src/"
+        }
+    }
+    ,"repositories": [
+      { "type": "git" ,"url": "https://github.com/phPoirot/Client-OAuth2.git" }
+    ]
+}
