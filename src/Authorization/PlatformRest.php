@@ -3,38 +3,16 @@ namespace Poirot\OAuth2Client\Authorization;
 
 use Poirot\ApiClient\Exceptions\exConnection;
 use Poirot\ApiClient\Exceptions\exHttpResponse;
-use Poirot\ApiClient\Interfaces\iPlatform;
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Interfaces\Response\iResponse;
-use Poirot\ApiClient\Request\Command;
-use Poirot\Std\ConfigurableSetter;
 
 
 class PlatformRest
-    extends ConfigurableSetter
-    implements iPlatform
+    extends aOAuthPlatform
 {
-    /** @var Command */
-    protected $Command;
-
     // Options:
     protected $usingSsl  = false;
     protected $serverUrl = null;
-
-
-    /**
-     * Build Platform Specific Expression To Send Trough Transporter
-     *
-     * @param iApiCommand $command Method Interface
-     *
-     * @return iPlatform Self or Copy/Clone
-     */
-    function withCommand(iApiCommand $command)
-    {
-        $self = clone $this;
-        $self->Command = $command;
-        return $self;
-    }
 
     /**
      * Build Response with send Expression over Transporter
@@ -42,18 +20,12 @@ class PlatformRest
      * - Result must be compatible with platform
      * - Throw exceptions if response has error
      *
-     * @throws \Exception Command Not Set
+     * @param iApiCommand $command
+     *
      * @return iResponse
      */
-    function send()
+    function doSend(iApiCommand $command)
     {
-        if (! $command = $this->Command )
-            throw new \Exception('No Command Is Specified.');
-
-
-        # Build Command
-
-
         // Alter Platform Commands
         $methodName = $command->getMethodName();
         $alterCall  = '_send'.ucfirst($methodName);
@@ -84,10 +56,10 @@ class PlatformRest
     // Alters
 
     /**
-     * @param Command $command
+     * @param iApiCommand $command
      * @return iResponse
      */
-    function _sendGetAuthUrl(Command $command)
+    function _sendGetAuthUrl(iApiCommand $command)
     {
         $reqUrl  = $this->_getServerHttpUrlFromCommand($command);
         $authUrl = \Poirot\OAuth2Client\appendQuery(
@@ -100,10 +72,10 @@ class PlatformRest
     }
 
     /**
-     * @param Command $command
+     * @param iApiCommand $command
      * @return iResponse
      */
-    function _sendToken(Command $command)
+    function _sendToken(iApiCommand $command)
     {
         $headers = [];
         $args    = $command->getArguments();
@@ -253,12 +225,12 @@ class PlatformRest
     /**
      * Determine Server Http Url Using Http or Https?
      *
-     * @param Command $command
+     * @param iApiCommand $command
      *
      * @return string
      * @throws \Exception
      */
-    protected function _getServerHttpUrlFromCommand(Command $command, $base = null)
+    protected function _getServerHttpUrlFromCommand(iApiCommand $command, $base = null)
     {
         $cmMethod = strtolower($command->getMethodName());
         switch ($cmMethod) {

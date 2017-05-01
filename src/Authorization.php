@@ -5,19 +5,22 @@ use Poirot\ApiClient\aClient;
 use Poirot\ApiClient\Interfaces\iClient;
 use Poirot\ApiClient\Interfaces\iPlatform;
 use Poirot\ApiClient\Request\Command;
-use Poirot\OAuth2\Server\Grant\aGrant;
+use Poirot\OAuth2Client\Authorization\aOAuthPlatform;
 use Poirot\OAuth2Client\Authorization\PlatformRest;
 use Poirot\OAuth2Client\Grant\aGrantRequest;
 use Poirot\OAuth2Client\Grant\Container\GrantPlugins;
 use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
+use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
 use Poirot\OAuth2Client\Interfaces\iGrantAuthorizeRequest;
 use Poirot\OAuth2Client\Interfaces\iGrantTokenRequest;
+use Poirot\OAuth2Client\Interfaces\ipGrantRequest;
 use Poirot\OAuth2Client\Model\Entity\AccessTokenObject;
 
 
 class Authorization
     extends aClient
     implements iClient
+    , iClientOfOAuth
 {
     protected $urlAuthorize;
     protected $baseUrl;
@@ -91,10 +94,10 @@ class Authorization
      *  GrantPlugins::AUTHORIZATION_CODE
      *  , ['state' => 'custom_state'] )
      *
-     * @param string $grantTypeName
-     * @param array  $overrideOptions
+     * @param string|ipGrantRequest $grantTypeName
+     * @param array                 $overrideOptions
      *
-     * @return aGrant
+     * @return aGrantRequest
      */
     function withGrant($grantTypeName, array $overrideOptions = [])
     {
@@ -108,7 +111,13 @@ class Authorization
             $options = array_merge($options, $overrideOptions);
 
 
-        $grant = $this->_grantPlugins()->fresh($grantTypeName, $options);
+        if ($grantTypeName instanceof ipGrantRequest) {
+            $grant = clone $grantTypeName;
+            $grant->with($grant::parseWith($options));
+        } else {
+            $grant = $this->_grantPlugins()->fresh($grantTypeName, $options);
+        }
+
         return $grant;
     }
 
@@ -183,6 +192,18 @@ class Authorization
     function getDefaultScopes()
     {
         return $this->defaultScopes;
+    }
+
+
+    /**
+     * Set Specific Platform
+     * @param aOAuthPlatform $platform
+     * @return $this
+     */
+    function setPlatform(aOAuthPlatform $platform)
+    {
+        $this->platform = $platform;
+        return $this;
     }
 
 
