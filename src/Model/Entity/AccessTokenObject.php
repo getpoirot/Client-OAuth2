@@ -70,7 +70,10 @@ class AccessTokenObject
      */
     function getDateTimeExpiration()
     {
-        // TODO Implement
+        $exprDateTime = __( new \DateTime() )
+            ->add( new \DateInterval(sprintf('PT%sS', $this->expiresIn)) );
+
+        return $exprDateTime;
     }
 
     /**
