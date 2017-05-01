@@ -4,18 +4,23 @@ namespace Poirot\OAuth2Client;
 use Poirot\ApiClient\aClient;
 use Poirot\ApiClient\Interfaces\iClient;
 use Poirot\ApiClient\Interfaces\iPlatform;
+use Poirot\ApiClient\Request\Command;
 use Poirot\OAuth2\Server\Grant\aGrant;
+use Poirot\OAuth2Client\Authorization\PlatformRest;
 use Poirot\OAuth2Client\Grant\aGrantRequest;
 use Poirot\OAuth2Client\Grant\Container\GrantPlugins;
-use Poirot\OAuth2Client\Interfaces\iAccessToken;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
+use Poirot\OAuth2Client\Interfaces\iGrantAuthorizeRequest;
+use Poirot\OAuth2Client\Interfaces\iGrantTokenRequest;
+use Poirot\OAuth2Client\Model\Entity\AccessTokenObject;
 
-// TODO Implement Grants Registry
+
 class Authorization
     extends aClient
     implements iClient
 {
     protected $urlAuthorize;
-    protected $urlToken;
+    protected $baseUrl;
     protected $defaultScopes = [];
     protected $clientId;
     protected $clientSecret;
@@ -32,43 +37,48 @@ class Authorization
      * - look in grants available with response_type code
      * - make url from grant parameters
      *
-     * @param aGrantRequest $grant Using specific grant
+     * @param iGrantAuthorizeRequest $grant Using specific grant
      *
      * @return string Authorization URL
      * @throws \Exception
      */
-    function attainAuthorizationUrl(aGrantRequest $grant)
+    function attainAuthorizationUrl(iGrantAuthorizeRequest $grant)
     {
-        if (! $grant->canRespondToAuthorize() )
-            throw new \Exception(sprintf(
-                'Grant (%s) Cant Respond To Authorization Request.'
-                , $grant->getGrantType()
-            ));
-
-
         # Build Authorize Url
 
-        $grantParams = $grant->assertAuthorizeParameters();
-
-        $authUrl = appendQuery(
-            $this->getUrlAuthorize()
-            , buildQueryString($grantParams)
+        $grantParams = $grant->assertAuthorizeParams();
+        $response    = $this->call(
+            $this->_newCommand('GetAuthUrl', $grantParams)
         );
 
-        return $authUrl;
+        if ( $ex = $response->hasException() )
+            throw $ex;
+
+        return $response->expected();
     }
 
     /**
      * Requests an access token using a specified grant.
      *
-     * @param aGrantRequest $grant
+     * @param iGrantTokenRequest $grant
      *
-     * @return iAccessToken
+     * @return iAccessTokenObject
      * @throws \Exception
      */
-    function attainAccessToken(aGrantRequest $grant)
+    function attainAccessToken(iGrantTokenRequest $grant)
     {
         // client_id, secret_key can send as Authorization Header Or Post Request Body
+        $grantParams = $grant->assertTokenParams();
+
+        $response = $this->call(
+            $this->_newCommand('Token', $grantParams)
+        );
+
+        if ( $ex = $response->hasException() )
+            throw $ex;
+
+        $r = $response->expected();
+        return new AccessTokenObject($r);
     }
 
     /**
@@ -106,33 +116,13 @@ class Authorization
     // Options
 
     /**
-     * Set Authorize OAuth Endpoint
-     * @param string $urlAuthorize
-     * @return Authorization
-     */
-    function setUrlAuthorize($urlAuthorize)
-    {
-        $this->urlAuthorize = (string) $urlAuthorize;
-        return $this;
-    }
-
-    /**
-     * Url To OAuth Authorize Endpoint
-     * @return string
-     */
-    function getUrlAuthorize()
-    {
-        return $this->urlAuthorize;
-    }
-
-    /**
      * Set Token OAuth Endpoint
-     * @param string $urlToken
+     * @param string $baseUrl
      * @return Authorization
      */
-    function setUrlToken($urlToken)
+    function setBaseUrl($baseUrl)
     {
-        $this->urlToken = (string) $urlToken;
+        $this->baseUrl = rtrim( (string) $baseUrl, '/' );
         return $this;
     }
 
@@ -140,9 +130,9 @@ class Authorization
      * Url To OAuth Retrieve Token Endpoint
      * @return string
      */
-    function getUrlToken()
+    function getBaseUrl()
     {
-        return $this->urlToken;
+        return $this->baseUrl;
     }
 
 
@@ -208,11 +198,29 @@ class Authorization
      */
     function platform()
     {
-        // TODO: Implement platform() method.
+        if (! $this->platform )
+            $this->platform = new PlatformRest;
+
+
+        # Default Options Overriding
+
+        $this->platform->setServerUrl(
+            $this->getBaseUrl()
+        );
+
+        return $this->platform;
     }
 
 
     // ..
+
+    protected function _newCommand($methodName, array $args = null)
+    {
+        $method = new Command;
+        $method->setMethodName($methodName);
+        $method->setArguments($args);
+        return $method;
+    }
 
     protected function _grantPlugins()
     {

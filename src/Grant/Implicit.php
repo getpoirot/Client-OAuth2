@@ -2,12 +2,12 @@
 namespace Poirot\OAuth2Client\Grant;
 
 use Poirot\OAuth2Client\Exception\exMissingGrantRequestParams;
-use Poirot\OAuth2Client\Interfaces\iGrantTokenRequest;
+use Poirot\OAuth2Client\Interfaces\iGrantAuthorizeRequest;
 
 
-class ClientCredential
+class Implicit
     extends aGrantRequest
-    implements iGrantTokenRequest
+    implements iGrantAuthorizeRequest
 {
     protected $code;
     protected $state;
@@ -22,9 +22,8 @@ class ClientCredential
      */
     function getGrantType()
     {
-        return 'client_credentials';
+        return 'implicit';
     }
-
 
     /**
      * Assert Parameters and Give Request Parameters
@@ -32,36 +31,39 @@ class ClientCredential
      * @return array
      * @throws exMissingGrantRequestParams
      */
-    function assertTokenParams()
+    function assertAuthorizeParams()
     {
         # Assert Params
 
-        if ( null === $this->getClientId() || null === $this->getClientSecret() )
-            throw new exMissingGrantRequestParams('Request Param "client_id" & "client_secret" must Set.');
+        if ( null === $this->getClientId() )
+            throw new exMissingGrantRequestParams('Request Param "client_id" must Set.');
 
 
         # Build Request Params
 
         $params = $this->__toArray();
+
+        unset($params['grant_type']);
         return $params;
     }
 
 
     // Grant Request Parameters
 
-    /**
-     * Client Secret Key
-     * @param string $clientSecret
-     * @return $this
-     */
-    function setClientSecret($clientSecret)
+    function setRedirectUri($redirectUri)
     {
-        $this->clientSecret = $clientSecret;
+        $this->redirectUri = (string) $redirectUri;
         return $this;
     }
 
-    function getClientSecret()
+    function getRedirectUri()
     {
-        return $this->clientSecret;
+        $this->redirectUri;
+    }
+
+
+    function getResponseType()
+    {
+        return 'token';
     }
 }

@@ -1,17 +1,20 @@
 <?php
 namespace Poirot\OAuth2Client\Grant;
 
-
-use Poirot\OAuth2Client\Exception\exGrantRequestNotImplemented;
 use Poirot\OAuth2Client\Exception\exMissingGrantRequestParams;
-use Poirot\Std\Hydrator\HydrateGetters;
+use Poirot\OAuth2Client\Interfaces\iGrantAuthorizeRequest;
+use Poirot\OAuth2Client\Interfaces\iGrantTokenRequest;
+
 
 class AuthorizeCode
     extends aGrantRequest
+    implements iGrantAuthorizeRequest
+    , iGrantTokenRequest
 {
     protected $code;
     protected $state;
     protected $redirectUri;
+    protected $clientSecret;
 
 
     /**
@@ -25,41 +28,26 @@ class AuthorizeCode
     }
 
     /**
-     * Can Respond To Authorization Request
-     *
-     * @return bool
-     */
-    function canRespondToAuthorize()
-    {
-        return true;
-    }
-
-    /**
-     * Can Respond To Access Token Request
-     *
-     * @return bool
-     */
-    function canRespondToToken()
-    {
-        return true;
-    }
-
-    /**
      * Assert Parameters and Give Request Parameters
      *
      * @return array
      * @throws exMissingGrantRequestParams
-     * @throws exGrantRequestNotImplemented
      */
-    function assertAuthorizeParameters()
+    function assertAuthorizeParams()
     {
-        $params = new HydrateGetters($this);
-        $params->setExcludeNullValues();
+        # Assert Params
 
-        $params = iterator_to_array($params);
+        if ( null === $this->getClientId() )
+            throw new exMissingGrantRequestParams('Request Param "client_id" must Set.');
+
+
+        # Build Request Params
+
+        $params = $this->__toArray();
+
         unset($params['code']);
         unset($params['grant_type']);
-
+        unset($params['client_secret']);
         return $params;
     }
 
@@ -68,15 +56,44 @@ class AuthorizeCode
      *
      * @return array
      * @throws exMissingGrantRequestParams
-     * @throws exGrantRequestNotImplemented
      */
-    function assertTokenParameters()
+    function assertTokenParams()
     {
-        // TODO: Implement assertTokenParameters() method.
+        # Assert Params
+
+        if ( null === $this->getCode() )
+            throw new exMissingGrantRequestParams('Request Param "code" must Set.');
+
+        if ( null === $this->getClientId() || null === $this->getClientSecret() )
+            throw new exMissingGrantRequestParams('Request Param "client_id" & "client_secret" must Set.');
+
+
+        # Build Request Params
+
+        $params = $this->__toArray();
+        unset($params['response_type']);
+
+        return $params;
     }
 
 
     // Grant Request Parameters
+
+    /**
+     * Client Secret Key
+     * @param string $clientSecret
+     * @return $this
+     */
+    function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+        return $this;
+    }
+
+    function getClientSecret()
+    {
+        return $this->clientSecret;
+    }
 
     function setRedirectUri($redirectUri)
     {

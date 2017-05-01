@@ -5,13 +5,11 @@ use Poirot\OAuth2Client\Exception\exMissingGrantRequestParams;
 use Poirot\OAuth2Client\Interfaces\iGrantTokenRequest;
 
 
-class ClientCredential
+class RefreshToken
     extends aGrantRequest
     implements iGrantTokenRequest
 {
-    protected $code;
-    protected $state;
-    protected $redirectUri;
+    protected $refreshToken;
     protected $clientSecret;
 
 
@@ -22,9 +20,8 @@ class ClientCredential
      */
     function getGrantType()
     {
-        return 'client_credentials';
+        return 'refresh_token';
     }
-
 
     /**
      * Assert Parameters and Give Request Parameters
@@ -35,6 +32,9 @@ class ClientCredential
     function assertTokenParams()
     {
         # Assert Params
+        if ( null === $this->getRefreshToken() )
+            throw new exMissingGrantRequestParams('Request Param "refresh_token" must Set.');
+
 
         if ( null === $this->getClientId() || null === $this->getClientSecret() )
             throw new exMissingGrantRequestParams('Request Param "client_id" & "client_secret" must Set.');
@@ -64,4 +64,23 @@ class ClientCredential
     {
         return $this->clientSecret;
     }
+
+    /**
+     * @param mixed $refreshToken
+     * @return RefreshToken
+     */
+    function setRefreshToken($refreshToken)
+    {
+        $this->refreshToken = $refreshToken;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    function getRefreshToken()
+    {
+        return $this->refreshToken;
+    }
+
 }

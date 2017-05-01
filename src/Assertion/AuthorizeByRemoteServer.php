@@ -4,7 +4,7 @@ namespace Poirot\OAuth2Client\Assertion;
 use Poirot\OAuth2\Model\AccessToken;
 use Poirot\OAuth2\Server\Exception\exOAuthServer;
 use Poirot\OAuth2\Server\Grant\GrantExtensionTokenValidation;
-use Poirot\OAuth2Client\Interfaces\iAccessToken;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
 
 
 /**
@@ -43,7 +43,7 @@ class AuthorizeByRemoteServer
      *
      * @param string $token
      *
-     * @return iAccessToken
+     * @return iAccessTokenObject
      * @throws exOAuthServer
      */
     function assertToken($token)

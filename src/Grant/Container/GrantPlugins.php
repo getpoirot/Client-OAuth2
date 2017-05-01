@@ -9,15 +9,24 @@ use Poirot\Loader\LoaderMapResource;
 use Poirot\OAuth2Client\Grant\aGrantRequest;
 use Poirot\OAuth2Client\Grant\AuthorizeCode;
 use Poirot\OAuth2Client\Grant\ClientCredential;
+use Poirot\OAuth2Client\Grant\Implicit;
+use Poirot\OAuth2Client\Grant\Password;
+use Poirot\OAuth2Client\Grant\RefreshToken;
 
 
 class GrantPlugins
     extends aContainerCapped
 {
+    const IMPLICIT           = 'implicit';
+    const PASSWORD           = 'password';
+    const REFRESH_TOKEN      = 'refresh_token';
     const AUTHORIZATION_CODE = 'authorization_code';
     const CLIENT_CREDENTIALS = 'client_credentials';
 
     protected $_map_resolver_options = [
+        self::IMPLICIT           => Implicit::class,
+        self::PASSWORD           => Password::class,
+        self::REFRESH_TOKEN      => RefreshToken::class,
         self::AUTHORIZATION_CODE => AuthorizeCode::class,
         self::CLIENT_CREDENTIALS => ClientCredential::class,
     ];

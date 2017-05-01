@@ -5,13 +5,12 @@ use Poirot\OAuth2Client\Exception\exMissingGrantRequestParams;
 use Poirot\OAuth2Client\Interfaces\iGrantTokenRequest;
 
 
-class ClientCredential
+class Password
     extends aGrantRequest
     implements iGrantTokenRequest
 {
-    protected $code;
-    protected $state;
-    protected $redirectUri;
+    protected $username;
+    protected $password;
     protected $clientSecret;
 
 
@@ -22,9 +21,8 @@ class ClientCredential
      */
     function getGrantType()
     {
-        return 'client_credentials';
+        return 'password';
     }
-
 
     /**
      * Assert Parameters and Give Request Parameters
@@ -35,6 +33,9 @@ class ClientCredential
     function assertTokenParams()
     {
         # Assert Params
+        if ( null === $this->getUsername() || null === $this->getPassword() )
+            throw new exMissingGrantRequestParams('Request Param "username" & "password" must Set.');
+
 
         if ( null === $this->getClientId() || null === $this->getClientSecret() )
             throw new exMissingGrantRequestParams('Request Param "client_id" & "client_secret" must Set.');
@@ -63,5 +64,41 @@ class ClientCredential
     function getClientSecret()
     {
         return $this->clientSecret;
+    }
+
+    /**
+     * @param mixed $username
+     * @return Password
+     */
+    function setUsername($username)
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param mixed $password
+     * @return Password
+     */
+    function setPassword($password)
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    function getPassword()
+    {
+        return $this->password;
     }
 }

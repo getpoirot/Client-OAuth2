@@ -1,13 +1,14 @@
 <?php
 namespace Poirot\OAuth2Client\Grant;
 
-use Poirot\OAuth2Client\Exception\exGrantRequestNotImplemented;
-use Poirot\OAuth2Client\Exception\exMissingGrantRequestParams;
+use Poirot\OAuth2Client\Interfaces\ipGrantRequest;
 use Poirot\Std\ConfigurableSetter;
+use Poirot\Std\Hydrator\HydrateGetters;
 
 
 abstract class aGrantRequest
     extends ConfigurableSetter
+    implements ipGrantRequest
 {
     protected $clientId;
     protected $scopes = [];
@@ -20,42 +21,21 @@ abstract class aGrantRequest
      */
     abstract function getGrantType();
 
-    /**
-     * Can Respond To Authorization Request
-     *
-     * @return bool
-     */
-    abstract function canRespondToAuthorize();
+
+    // Helper
 
     /**
-     * Can Respond To Access Token Request
-     *
-     * @return bool
-     */
-    abstract function canRespondToToken();
-
-    /**
-     * Assert Parameters and Give Request Parameters
+     * Get Grant Request Params As Array
      *
      * @return array
-     * @throws exMissingGrantRequestParams
-     * @throws exGrantRequestNotImplemented
      */
-     function assertAuthorizeParameters()
-     {
-         throw new exGrantRequestNotImplemented;
-     }
-
-    /**
-     * Assert Parameters and Give Request Parameters
-     *
-     * @return array
-     * @throws exMissingGrantRequestParams
-     * @throws exGrantRequestNotImplemented
-     */
-    function assertTokenParameters()
+    function __toArray()
     {
-        throw new exGrantRequestNotImplemented;
+        $params = __( new HydrateGetters($this) )
+            ->setExcludeNullValues();
+
+        $params = iterator_to_array($params);
+        return $params;
     }
 
 
@@ -93,7 +73,7 @@ abstract class aGrantRequest
     }
 
 
-    //
+    // ...
 
     /**
      * @override ensure not throw exception
