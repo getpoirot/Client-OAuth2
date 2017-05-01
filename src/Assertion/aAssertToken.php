@@ -2,7 +2,7 @@
 namespace Poirot\OAuth2Client\Assertion;
 
 use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
-use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
+use Poirot\OAuth2Client\Interfaces\iAccessToken;
 use Psr\Http\Message\ServerRequestInterface;
 
 
@@ -13,17 +13,17 @@ use Psr\Http\Message\ServerRequestInterface;
 abstract class aAssertToken
 {
     /**
-     * Validate Authorize Token With OAuth Server
+     * Assert Token String Identifier With OAuth Server
      *
      * - connect to server specification and validate given token
      * - ensure token expiration!
      *
-     * @param string $token
+     * @param string $tokenStr
      *
-     * @return iAccessTokenObject
+     * @return iAccessToken
      * @throws exOAuthAccessDenied Access Denied
      */
-    abstract function assertToken($token);
+    abstract function assertToken($tokenStr);
 
     /**
      * As per the Bearer spec (draft 8, section 2) - there are three ways for a client
@@ -34,7 +34,7 @@ abstract class aAssertToken
      *
      * @return null|string Token
      */
-    function parseTokenFromRequest(ServerRequestInterface $request)
+    function parseTokenStrFromRequest(ServerRequestInterface $request)
     {
         # Get Token From Header:
         if ($header = $request->getHeaderLine('Authorization')) {
