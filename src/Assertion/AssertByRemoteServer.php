@@ -6,6 +6,7 @@ use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
 use Poirot\OAuth2Client\Interfaces\iAccessToken;
 use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
 use Poirot\OAuth2Client\Model\Entity\AccessToken;
+use Poirot\Std\Hydrator\HydrateGetters;
 
 
 /**
@@ -42,6 +43,8 @@ class AssertByRemoteServer
     }
 
     /**
+     * // TODO Improve by consider response variant from oauth server
+     *
      * Assert Token String Identifier With OAuth Server
      *
      * - connect to server specification and validate given token
@@ -61,8 +64,7 @@ class AssertByRemoteServer
         if (! $tokenEmbededMeta = json_decode( $tokenObject->getAccessToken(), true) )
             throw new \RuntimeException('Mismatch Token Response Structure Data; cant parse extra.');
 
-        $result = \Poirot\Std\toArrayObject($tokenObject);
-
+        $result = iterator_to_array( new HydrateGetters($tokenObject) );
         $result = array_merge($result, $tokenEmbededMeta);
         unset($result['access_token']);
 
@@ -76,15 +78,15 @@ class AssertByRemoteServer
          * ]
          */
 
-        $tokenStr = new AccessToken;
-        $tokenStr
+        $tokenEntity = new AccessToken;
+        $tokenEntity
             ->setIdentifier($tokenStr)
             ->setDateTimeExpiration( $tokenObject->getDateTimeExpiration() )
-            ->setClientIdentifier($result['client_id'])
-            ->setOwnerIdentifier($result['resource_owner'])
-            ->setScopes(explode(' ', $result['scope']))
+            ->setClientIdentifier(@$result['client_id'])
+            ->setOwnerIdentifier(@$result['resource_owner'])
+            ->setScopes(explode(' ', @$result['scopes']))
         ;
 
-        return $tokenStr;
+        return $tokenEntity;
     }
 }
