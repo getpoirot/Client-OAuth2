@@ -33,10 +33,6 @@ class AccessToken
      */
     function getIdentifier()
     {
-        if (!$this->identifier)
-            // generate token if it not provided!
-            $this->setIdentifier(\Poirot\Std\generateUniqueIdentifier());
-        
         return $this->identifier;
     }
 
@@ -49,13 +45,7 @@ class AccessToken
      */
     function setIdentifier($identifier)
     {
-        if ($identifier !== null && ! (is_int($identifier) || is_string($identifier)) )
-            throw new \InvalidArgumentException(sprintf(
-                'Identifier must be int or string; given: (%s).'
-                , \Poirot\Std\flatten($identifier)
-            ));
-
-        $this->identifier = $identifier;
+        $this->identifier = (string) $identifier;
         return $this;
     }
 
@@ -78,13 +68,7 @@ class AccessToken
      */
     function setClientIdentifier($clientIdentifier)
     {
-        if ($clientIdentifier !== null && ! (is_int($clientIdentifier) || is_string($clientIdentifier)) )
-            throw new \InvalidArgumentException(sprintf(
-                'Identifier must be int or string; given: (%s).'
-                , \Poirot\Std\flatten($clientIdentifier)
-            ));
-
-        $this->clientIdentifier = $clientIdentifier;
+        $this->clientIdentifier = (string) $clientIdentifier;
         return $this;
     }
 
@@ -130,12 +114,6 @@ class AccessToken
      */
     function setScopes($scopes)
     {
-        if (!is_array($scopes))
-            throw new \InvalidArgumentException(sprintf(
-                'Scopes must be array of string contains scope identifier; given: (%s).'
-                , \Poirot\Std\flatten($scopes)
-            ));
-        
         $this->scopes = $scopes;
         return $this;
     }
@@ -151,17 +129,6 @@ class AccessToken
     {
         $scopes = array_merge($this->getScopes(), array( (string) $scope) );
         $this->setScopes($scopes);
-        return $this;
-    }
-
-    /**
-     * Clear Scopes
-     * 
-     * @return $this
-     */
-    function clearScopes()
-    {
-        $this->scopes = array();
         return $this;
     }
 
