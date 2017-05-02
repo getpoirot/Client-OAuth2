@@ -33,7 +33,7 @@ return [
                 \Poirot\OAuth2Client\Assertion\AssertByRemoteServer::class
                 , [
                     // Client Argument Attained From Registered Service
-                    'client' => '/module/oauth2client/services/OAuthClient',
+                    'client' => new \Poirot\Ioc\instance('/module/oauth2client/services/OAuthClient'),
                 ]
             ),
         ],
