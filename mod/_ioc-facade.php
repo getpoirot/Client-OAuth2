@@ -16,8 +16,10 @@ namespace Module\OAuth2Client\Actions
 
 namespace Module\OAuth2Client\Services
 {
+    use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
+
     /**
-     *
+     * @method static iClientOfOAuth OAuthClient()
      */
     class IOC extends \IOC
     { }
