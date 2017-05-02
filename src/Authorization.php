@@ -87,6 +87,7 @@ class Authorization
     /**
      * Retrieve Specific Grant Type
      *
+     * - inject default client configuration within grant object
      *
      * example code:
      *

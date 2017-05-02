@@ -1,6 +1,9 @@
 <?php
 namespace Poirot\OAuth2Client\Interfaces;
 
+use Poirot\OAuth2Client\Grant\aGrantRequest;
+
+
 interface iClientOfOAuth
 {
     /**
@@ -26,5 +29,21 @@ interface iClientOfOAuth
      */
     function attainAccessToken(iGrantTokenRequest $grant);
 
-
+    /**
+     * Retrieve Specific Grant Type
+     *
+     * - inject default client configuration within grant object
+     *
+     * example code:
+     *
+     * $auth->withGrant(
+     *  GrantPlugins::AUTHORIZATION_CODE
+     *  , ['state' => 'custom_state'] )
+     *
+     * @param string|ipGrantRequest $grantTypeName
+     * @param array                 $overrideOptions
+     *
+     * @return aGrantRequest
+     */
+    function withGrant($grantTypeName, array $overrideOptions = []);
 }

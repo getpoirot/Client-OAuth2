@@ -17,7 +17,7 @@ class Module implements Sapi\iSapiModule
     , Sapi\Module\Feature\iFeatureModuleNestActions
     , Sapi\Module\Feature\iFeatureModuleNestServices
 {
-    const CONF_KEY = 'module.oauth2client';
+    const CONF = 'module.oauth2client';
 
 
     /**

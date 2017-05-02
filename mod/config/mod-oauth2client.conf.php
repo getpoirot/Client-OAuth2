@@ -2,8 +2,8 @@
 use Module\OAuth2Client\Actions\ServiceAssertTokenAction;
 
 return [
-    \Module\OAuth2Client\Module::CONF_KEY => [
-        ServiceAssertTokenAction::CONF_KEY => [
+    \Module\OAuth2Client\Module::CONF => [
+        ServiceAssertTokenAction::CONF => [
             'debug_mode' => [
                 // Not Connect to OAuth Server and Used Asserted Token With OwnerObject Below
                 'enabled' => true,
@@ -16,12 +16,9 @@ return [
                     ],
                 ],
             ],
-        ],
 
-        // Service Used By AssertToken To Authorize Given Request
-        \Module\OAuth2Client\Services\ServiceAuthorizeToken::CONF_KEY => [
             'service' => new \Poirot\Ioc\instance(
-                \Poirot\OAuth2\Resource\Validation\AuthorizeByRemoteServer::class
+                \Poirot\OAuth2Client\Assertion\AssertByRemoteServer::class
                 , [
                     'oauthTokenEndpoint'  => 'http://oauth_web-server/oauth/auth/token',
                     // Basic base64(clientId:clientSecret)

@@ -1,43 +1,29 @@
 <?php
-namespace Module\OAuth2Client
+namespace Module\OAuth2Client\Assertion
 {
-    use Poirot\OAuth2\Interfaces\Server\Repository\iEntityAccessToken;
+    use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
+    use Poirot\OAuth2Client\Interfaces\iAccessToken;
+
 
     /**
-     * Get Specific Identifier From Identifiers List
+     * Validate Asserted Token Entity (Retrieved From Server),
+     * against given condition
      *
-     * @param string                  $type
-     * @param iUserIdentifierObject[] $identifiers
+     * @param iAccessToken|null $token
+     * @param object            $tokenCondition
      *
-     * @return iUserIdentifierObject|null
-     * @throws \Exception
+     * @throws exOAuthAccessDenied
      */
-    function getIdentifierFromList($type, $identifiers)
+    function validateAccessToken(iAccessToken $token = null, $tokenCondition)
     {
-        foreach ($identifiers as $identifier) {
-            if ($identifier->getType() === $type)
-                return $identifier;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param iEntityAccessToken|null $token
-     * @param $tokenCondition
-     *
-     * @throws exAccessDenied
-     */
-    function validateGivenToken(iEntityAccessToken $token = null, $tokenCondition)
-    {
-        if (!$token instanceof iEntityAccessToken)
-            throw new exAccessDenied('Token is revoked or mismatch.');
+        if (!$token instanceof iAccessToken)
+            throw new exOAuthAccessDenied('Token is revoked or mismatch.');
 
 
         if ($tokenCondition) {
             # Check Resource Owner
             if ( $tokenCondition->mustHaveOwner && empty($token->getOwnerIdentifier()) )
-                throw new exAccessDenied('Token Not Granted To Resource Owner; But Have To.');
+                throw new exOAuthAccessDenied('Token Not Granted To Resource Owner; But Have To.');
 
             # Check Scopes
             if (!empty($tokenCondition->scopes)) {
@@ -47,10 +33,10 @@ namespace Module\OAuth2Client
         }
     };
 
-    function functorValidateGivenToken($tokenCondition)
+    function funcValidateAccessToken($tokenCondition)
     {
-        return function (iEntityAccessToken $token = null) use ($tokenCondition) {
-            validateGivenToken($token, $tokenCondition);
+        return function (iAccessToken $token = null) use ($tokenCondition) {
+            validateAccessToken($token, $tokenCondition);
         };
     }
 }
