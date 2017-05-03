@@ -14,7 +14,7 @@ class AccessTokenObject
     protected $tokenType;
     protected $clientId;
     protected $expiresIn;
-    protected $scopes = array();
+    protected $scopes;
 
 
     /**

@@ -2,11 +2,7 @@
 namespace Module\OAuth2Client\Actions;
 
 use Poirot\Application\aSapi;
-use Poirot\Http\Psr\ServerRequestBridgeInPsr;
 use Poirot\Ioc\Container\Service\aServiceContainer;
-use Poirot\OAuth2\Resource\Validation\aAuthorizeToken;
-use Poirot\OAuth2\Server\Exception\exOAuthServer;
-use Poirot\OAuth2\Server\Response\Error\DataErrorResponse;
 use Poirot\Std\Struct\DataEntity;
 
 
@@ -32,14 +28,19 @@ class ServiceAssertTokenAction
 
         # Check Debug Mode:
 
-        $token  = null;
-
         if (isset($config['debug_mode']) && $config['debug_mode']['enabled'])
-        {
+            // Mock Debuging Mode
+            return new AssertDebugTokenAction($config['debug_mode']['token_settings']);
 
-        }
 
+        # Assertion Instance From Config
+        $assertion = $config['assertion_rig'];
+        if ( is_string($assertion) )
+            // Defined Service
+            $assertion = $this->services()->get($assertion);
 
+        $assertAction = new AssertTokenAction($assertion);
+        return $assertAction;
     }
 
 
