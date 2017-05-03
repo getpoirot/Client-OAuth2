@@ -4,11 +4,11 @@ Provides a simple and clean Abstraction for Integration with OAuth 2.0 Server Pr
 ## Config Client
 
 ```php
-$auth = new \Poirot\OAuth2Client\Authorization([
-    'base_url'      => 'http://172.17.0.1:8000/',
-    'client_id'     => 'test@default.axGEceVCtGqZAdW3rc34sqbvTASSTZxD',
-    'client_secret' => 'xPWIpmzBK38MmDRd',
-]);
+$auth = new \Poirot\OAuth2Client\Client(
+    'http://172.17.0.1:8000/'
+    , 'test@default.axGEceVCtGqZAdW3rc34sqbvTASSTZxD'
+    , 'xPWIpmzBK38MmDRd'
+);
 ```
 
 ## Retrieve Implicit Url Redirection
@@ -28,11 +28,13 @@ $url = $auth->attainAuthorizationUrl( $auth->withGrant(GrantPlugins::AUTHORIZATI
 When User redirect back include Auth Code:
  
 ```php
-$token = $auth->attainAccessToken( 
+/** @var iAccessTokenObject $token */
+$token = $auth->attainAccessToken(
     $auth->withGrant(GrantPlugins::AUTHORIZATION_CODE, ['code' => 'your_auth_code'])
 );
 
-$token->getOwnerIdentifier();
+$token->getAccessToken();
+$token->getScopes();
 $token->getDateTimeExpiration();
 // ...
 ```

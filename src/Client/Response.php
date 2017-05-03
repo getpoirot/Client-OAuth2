@@ -1,5 +1,5 @@
 <?php
-namespace Poirot\OAuth2Client\Authorization;
+namespace Poirot\OAuth2Client\Client;
 
 use Poirot\ApiClient\Response\ExpectedJson;
 use Poirot\ApiClient\ResponseOfClient;
@@ -24,7 +24,7 @@ class Response
             // Response Body Can parsed To Data Structure
             if ( $exception = $expected->get('error') ) {
                 $this->exception = new \Exception(
-                    $exception->get('error_description')
+                    $expected->get('error_description')
                     .' '
                     .$expected->get('hint')
 

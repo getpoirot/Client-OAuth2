@@ -1,10 +1,9 @@
 <?php
-namespace Poirot\OAuth2Client\Authorization;
+namespace Poirot\OAuth2Client\Client;
 
 use Poirot\ApiClient\Interfaces\iPlatform;
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Interfaces\Response\iResponse;
-use Poirot\ApiClient\Request\Command;
 use Poirot\Std\ConfigurableSetter;
 
 
@@ -12,12 +11,8 @@ abstract class aOAuthPlatform
     extends ConfigurableSetter
     implements iPlatform
 {
-    /** @var Command */
+    /** @var iApiCommand */
     protected $Command;
-
-    // Options:
-    protected $usingSsl  = false;
-    protected $serverUrl = null;
 
 
     /**
@@ -49,15 +44,18 @@ abstract class aOAuthPlatform
             throw new \Exception('No Command Is Specified.');
 
 
-        return $this->doSend($command);
-    }
+        // Alter Platform Commands
+        $methodName = $command->getMethodName();
+        $nameSpace  = implode('_', $command->getNamespace());
+        $alterCall  = $nameSpace.'_'.$methodName;
+        if (! method_exists($this, $alterCall) )
+            throw new \BadMethodCallException(sprintf(
+                'Method (%s) is Invalid.'
+                , $command->getMethodName()
+            ));
 
-    /**
-     * Do Execute Command
-     *
-     * @param iApiCommand $command
-     *
-     * @return iResponse
-     */
-    abstract function doSend(iApiCommand $command);
+
+        // Call Alternative Method Call Instead ...
+        return $this->{$alterCall}( $command );
+    }
 }

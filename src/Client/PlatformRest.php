@@ -1,10 +1,11 @@
 <?php
-namespace Poirot\OAuth2Client\Authorization;
+namespace Poirot\OAuth2Client\Client;
 
 use Poirot\ApiClient\Exceptions\exConnection;
 use Poirot\ApiClient\Exceptions\exHttpResponse;
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Interfaces\Response\iResponse;
+use Poirot\OAuth2Client\Client\PlatformRest\ServerUrlEndpoints;
 
 
 class PlatformRest
@@ -14,71 +15,38 @@ class PlatformRest
     protected $usingSsl  = false;
     protected $serverUrl = null;
 
-    /**
-     * Build Response with send Expression over Transporter
-     *
-     * - Result must be compatible with platform
-     * - Throw exceptions if response has error
-     *
-     * @param iApiCommand $command
-     *
-     * @return iResponse
-     */
-    function doSend(iApiCommand $command)
-    {
-        // Alter Platform Commands
-        $methodName = $command->getMethodName();
-        $alterCall  = '_send'.ucfirst($methodName);
-        if (method_exists($this, $alterCall))
-            // Call Alternative Method Call Instead ...
-            return $this->{$alterCall}($command);
-
-
-        // Prepare Command Send Over Wire
-
-        $headers   = [];
-        $arguments = $command->getArguments();
-
-
-        ## Send Data Over Wire ...
-
-        $response = $this->_sendViaCurl(
-            'POST'
-            , $this->_getServerHttpUrlFromCommand($command)
-            , $arguments
-            , $headers
-        );
-
-        return $response;
-    }
-
 
     // Alters
 
     /**
+     * Get Authorize Url By Argument Specified
+     *
      * @param iApiCommand $command
+     *
      * @return iResponse
      */
-    function _sendGetAuthUrl(iApiCommand $command)
+    protected function _GetAuthorizeUrl(iApiCommand $command)
     {
-        $reqUrl  = $this->_getServerHttpUrlFromCommand($command);
+        $serverUrl = $this->_getServerUrlEndpoints($command);
+
         $authUrl = \Poirot\OAuth2Client\appendQuery(
-            $reqUrl
-            , \Poirot\OAuth2Client\buildQueryString( $command->getArguments() )
+            $serverUrl
+            , \Poirot\OAuth2Client\buildQueryString( iterator_to_array($command) )
         );
 
-        $response = new Response($authUrl);
+        $response = new Response( $authUrl );
         return $response;
     }
 
     /**
+     * Request Grant Token
      * @param iApiCommand $command
      * @return iResponse
      */
-    function _sendToken(iApiCommand $command)
+    function _Token(iApiCommand $command)
     {
         $headers = [];
-        $args    = $command->getArguments();
+        $args    = iterator_to_array($command);
 
         if (
             array_key_exists('client_id',     $args)
@@ -92,13 +60,8 @@ class PlatformRest
             unset($args['client_secret']);
         }
 
-        $response = $this->_sendViaCurl(
-            'POST'
-            , $this->_getServerHttpUrlFromCommand($command)
-            , $args
-            , $headers
-        );
-
+        $url = $this->_getServerUrlEndpoints($command);
+        $response = $this->_sendViaCurl('POST', $url, $args, $headers);
         return $response;
     }
 
@@ -222,28 +185,14 @@ class PlatformRest
         return $response;
     }
 
-    /**
-     * Determine Server Http Url Using Http or Https?
-     *
-     * @param iApiCommand $command
-     *
-     * @return string
-     * @throws \Exception
-     */
-    protected function _getServerHttpUrlFromCommand(iApiCommand $command, $base = null)
+    protected function _getServerUrlEndpoints($command)
     {
-        $cmMethod = strtolower($command->getMethodName());
-        switch ($cmMethod) {
-            case 'getauthurl':
-                $base = 'auth';
-                break;
-            case 'token':
-                $base = 'auth/token';
-                break;
-        }
+        $url = new ServerUrlEndpoints(
+            $this->getServerUrl()
+            , (string) $command
+            , $this->isUsingSsl()
+        );
 
-        $serverUrl = rtrim($this->getServerUrl(), '/');
-        (! $base ) ?: $serverUrl .= '/'. rtrim($base, '/');
-        return $serverUrl;
+        return (string) $url;
     }
 }

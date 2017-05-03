@@ -2,11 +2,11 @@
 namespace Poirot\OAuth2Client;
 
 use Poirot\ApiClient\aClient;
-use Poirot\ApiClient\Interfaces\iClient;
 use Poirot\ApiClient\Interfaces\iPlatform;
-use Poirot\ApiClient\Request\Command;
-use Poirot\OAuth2Client\Authorization\aOAuthPlatform;
-use Poirot\OAuth2Client\Authorization\PlatformRest;
+use Poirot\OAuth2Client\Client\aOAuthPlatform;
+use Poirot\OAuth2Client\Client\PlatformRest;
+use Poirot\OAuth2Client\Command\GetAuthorizeUrl;
+use Poirot\OAuth2Client\Command\Token;
 use Poirot\OAuth2Client\Grant\aGrantRequest;
 use Poirot\OAuth2Client\Grant\Container\GrantPlugins;
 use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
@@ -17,19 +17,35 @@ use Poirot\OAuth2Client\Interfaces\ipGrantRequest;
 use Poirot\OAuth2Client\Model\Entity\AccessTokenObject;
 
 
-class Authorization
+class Client
     extends aClient
-    implements iClient
-    , iClientOfOAuth
+    implements iClientOfOAuth
 {
-    protected $urlAuthorize;
     protected $baseUrl;
-    protected $defaultScopes = [];
     protected $clientId;
     protected $clientSecret;
+    protected $defaultScopes = [];
 
     /** @var GrantPlugins */
     protected $grantPlugins;
+    protected $platform;
+
+
+    /**
+     * Client constructor.
+     *
+     * @param string $baseUrl      Server base url http://172.17.0.1/auth
+     * @param string $clientId     Client ID Given by OAuth Server
+     * @param string $clientSecret Client Secret
+     * @param array $defaultScopes Default scopes when request token
+     */
+    function __construct($baseUrl, $clientId, $clientSecret = null, array $defaultScopes = [])
+    {
+        $this->baseUrl  = rtrim( (string) $baseUrl, '/' );
+        $this->clientId = (string) $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->defaultScopes = $defaultScopes;
+    }
 
 
     // OAuth Authorization
@@ -50,9 +66,7 @@ class Authorization
         # Build Authorize Url
 
         $grantParams = $grant->assertAuthorizeParams();
-        $response    = $this->call(
-            $this->_newCommand('GetAuthUrl', $grantParams)
-        );
+        $response    = $this->call( new GetAuthorizeUrl($grantParams) );
 
         if ( $ex = $response->hasException() )
             throw $ex;
@@ -73,10 +87,7 @@ class Authorization
         // client_id, secret_key can send as Authorization Header Or Post Request Body
         $grantParams = $grant->assertTokenParams();
 
-        $response = $this->call(
-            $this->_newCommand('Token', $grantParams)
-        );
-
+        $response = $this->call( new Token($grantParams) );
         if ( $ex = $response->hasException() )
             throw $ex;
 
@@ -103,9 +114,9 @@ class Authorization
     function withGrant($grantTypeName, array $overrideOptions = [])
     {
         $options = [
-            'scopes'        => $this->getDefaultScopes(),
-            'client_id'     => $this->getClientId(),
-            'client_secret' => $this->getClientSecret(),
+            'scopes'        => $this->defaultScopes,
+            'client_id'     => $this->clientId,
+            'client_secret' => $this->clientSecret,
         ];
 
         if (! empty($overrideOptions) )
@@ -123,78 +134,7 @@ class Authorization
     }
 
 
-    // Options
-
-    /**
-     * Set Token OAuth Endpoint
-     * @param string $baseUrl
-     * @return Authorization
-     */
-    function setBaseUrl($baseUrl)
-    {
-        $this->baseUrl = rtrim( (string) $baseUrl, '/' );
-        return $this;
-    }
-
-    /**
-     * Url To OAuth Retrieve Token Endpoint
-     * @return string
-     */
-    function getBaseUrl()
-    {
-        return $this->baseUrl;
-    }
-
-
-    // Grant Default Options
-
-    function setClientId($clientId)
-    {
-        $this->clientId = (string) $clientId;
-        return $this;
-    }
-
-    function getClientId()
-    {
-        return $this->clientId;
-    }
-
-    /**
-     * Client Secret Key
-     * @param string $clientSecret
-     * @return Authorization
-     */
-    function setClientSecret($clientSecret)
-    {
-        $this->clientSecret = $clientSecret;
-        return $this;
-    }
-
-    function getClientSecret()
-    {
-        return $this->clientSecret;
-    }
-
-    /**
-     * Default Token Request Scopes
-     * @param array $defaultScopes
-     * @return Authorization
-     */
-    function setDefaultScopes(array $defaultScopes)
-    {
-        $this->defaultScopes = $defaultScopes;
-        return $this;
-    }
-
-    /**
-     * Default Token Scopes
-     * @return []
-     */
-    function getDefaultScopes()
-    {
-        return $this->defaultScopes;
-    }
-
+    // Implement aClient
 
     /**
      * Set Specific Platform
@@ -207,9 +147,6 @@ class Authorization
         return $this;
     }
 
-
-    // Implement iClient
-
     /**
      * Get Client Platform
      *
@@ -218,31 +155,20 @@ class Authorization
      *
      * @return iPlatform
      */
-    function platform()
+    protected function platform()
     {
         if (! $this->platform )
             $this->platform = new PlatformRest;
 
 
         # Default Options Overriding
-
-        $this->platform->setServerUrl(
-            $this->getBaseUrl()
-        );
+        $this->platform->setServerUrl( $this->baseUrl );
 
         return $this->platform;
     }
 
 
     // ..
-
-    protected function _newCommand($methodName, array $args = null)
-    {
-        $method = new Command;
-        $method->setMethodName($methodName);
-        $method->setArguments($args);
-        return $method;
-    }
 
     protected function _grantPlugins()
     {
