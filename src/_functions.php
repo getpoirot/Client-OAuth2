@@ -32,4 +32,20 @@ namespace Poirot\OAuth2Client
 
         return $url;
      }
+
+    /**
+     * Check Expiration Of DateTime
+     *
+     * @param \DateTime $dateTime
+     *
+     * @return boolean
+     */
+    function checkExpiry(\DateTime $dateTime)
+    {
+        $currDateTime   = new \DateTime();
+        $currDateTime   = $currDateTime->getTimestamp();
+
+        $expireDateTime = $dateTime->getTimestamp();
+        return ($currDateTime-$expireDateTime > 0);
+    }
 }

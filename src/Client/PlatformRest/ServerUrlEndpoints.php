@@ -47,10 +47,14 @@ class ServerUrlEndpoints
             case 'token':
                 $base = 'auth/token';
                 break;
+
+            case 'members::exists':
+                $base = 'api/v1/members/exists';
+                break;
         }
 
         $serverUrl = rtrim($this->serverBaseUrl, '/');
-        (! $base ) ?: $serverUrl .= '/'. rtrim($base, '/');
+        (! $base ) ?: $serverUrl .= '/'. trim($base, '/');
         return $serverUrl;
     }
 }
