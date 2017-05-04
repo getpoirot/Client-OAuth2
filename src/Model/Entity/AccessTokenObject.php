@@ -16,6 +16,8 @@ class AccessTokenObject
     protected $expiresIn;
     protected $scopes;
 
+    protected $datetimeExpiration;
+
 
     /**
      * Unique Token Identifier
@@ -70,10 +72,15 @@ class AccessTokenObject
      */
     function getDateTimeExpiration()
     {
-        $exprDateTime = __( new \DateTime() )
-            ->add( new \DateInterval(sprintf('PT%sS', $this->expiresIn)) );
+        if (! $this->datetimeExpiration ) {
+            $exprDateTime = __( new \DateTime() )
+                ->add( new \DateInterval(sprintf('PT%sS', $this->expiresIn)) );
 
-        return $exprDateTime;
+            $this->datetimeExpiration = $exprDateTime;
+        }
+
+
+        return $this->datetimeExpiration;
     }
 
     /**
@@ -86,6 +93,7 @@ class AccessTokenObject
     function setExpiresIn($expiry)
     {
         $this->expiresIn = $expiry;
+        $this->datetimeExpiration = $this->getDateTimeExpiration();
         return $this;
     }
 
