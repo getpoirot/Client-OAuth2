@@ -73,3 +73,49 @@ try {
 
 ## And So on ....
 
+
+# Poirot-OAuth2 Server Federation Commands
+
+Specific Poirot Server Federation Commands To Deal 3rd party application with Server.
+
+! For Federation Calls we need valid token:
+  this token can strictly defined to client or retrieve from server.
+  
+  example below show token asserted from oauth server when required!
+   
+```php
+
+// Setup OAuth2 Client
+$client = new \Poirot\OAuth2Client\Client(
+    'http://172.17.0.1:8000/'
+    , 'test@default.axGEceVCtGqZAdW3rc34sqbvTASSTZxD'
+    , 'xPWIpmzBK38MmDRd'
+);
+
+// Token Provider for Federation Calls
+// Use Credential Grant as Grant Type for Tokens
+$tokenProvider = new TokenFromOAuthClient(
+    $client
+    , $client->withGrant('client_credentials') 
+);
+
+// Note: 
+// Make Calls and Don`t Worry About Token Renewal And Expired Tokens.
+// Platfrom Will Handle It.
+
+$federation = new \Poirot\OAuth2Client\Federation(
+    'http://172.17.0.1:8000/'
+    , $tokenProvider
+);
+
+// Check wheather this identifier(s) is given by any user?
+$checkExists = $federation->checkIdentifierGivenToAnyUser([
+    'email'  => 'naderi.payam@gmail.com',
+    'mobile' => [
+        'number'  => '9355497674',
+        'country' => '+98',
+    ],
+]);
+
+```
+
