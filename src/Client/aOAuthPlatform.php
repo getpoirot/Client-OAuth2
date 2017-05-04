@@ -50,8 +50,9 @@ abstract class aOAuthPlatform
         $alterCall  = $nameSpace.'_'.$methodName;
         if (! method_exists($this, $alterCall) )
             throw new \BadMethodCallException(sprintf(
-                'Method (%s) is Invalid.'
+                'Method (%s) is not defined in Platform as (%s).'
                 , $command->getMethodName()
+                , $alterCall
             ));
 
 
