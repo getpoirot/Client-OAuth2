@@ -145,6 +145,10 @@ class PlatformRest
             # build request body
             $urlEncodeData = http_build_query($data);
             curl_setopt($handle, CURLOPT_POSTFIELDS, $urlEncodeData);
+
+        } elseif ($method == 'GET') {
+            $urlEncodeData = http_build_query($data);
+            // TODO set data in query params
         }
 
         $headers = array_merge(
@@ -172,7 +176,7 @@ class PlatformRest
         }
 
         $exception = null;
-        if ($cResponseCode != 200) {
+        if (! ($cResponseCode >= 200 && $cResponseCode < 300) ) {
             if ($cResponseCode >= 300 && $cResponseCode < 400)
                 $cResponse = 'Response Redirected To Another Uri.';
 
@@ -181,6 +185,7 @@ class PlatformRest
 
         $response = new Response(
             $cResponse
+            , $cResponseCode
             , ['content_type' => $cContentType]
             , $exception
         );
@@ -192,7 +197,7 @@ class PlatformRest
     {
         $url = new ServerUrlEndpoints(
             $this->getServerUrl()
-            , (string) $command
+            , $command
             , $this->isUsingSsl()
         );
 

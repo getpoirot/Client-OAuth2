@@ -1,5 +1,5 @@
 <?php
-namespace Poirot\OAuth2Client\Federation\Command\Members;
+namespace Poirot\OAuth2Client\Federation\Command;
 
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Request\tCommandHelper;
@@ -9,37 +9,39 @@ use Poirot\Std\Hydrator\HydrateGetters;
 
 
 /**
- * To check whether user with given identifier(s) exists?
+ * Register New User
  *
  */
-class Exists
+class Register
     extends ConfigurableSetter
     implements iApiCommand
     , \IteratorAggregate
 {
     use tCommandHelper;
 
+    protected $fullname;
+    protected $credential;
     protected $username;
     protected $mobile;
     protected $email;
+
     protected $token;
 
-
-    /**
-     * Get Namespace
-     *
-     * @ignore
-     * @return array
-     */
-    function getNamespace()
-    {
-        return ['members'];
-    }
 
 
     // Method Arguments
 
     // Setter:
+
+    function setFullname($fullname)
+    {
+        $this->fullname = (string) $fullname;
+    }
+
+    function setCredential($credential)
+    {
+        $this->credential = (string) $credential;
+    }
 
     function setUsername($username)
     {
@@ -56,12 +58,23 @@ class Exists
         $this->mobile = $mobile;
     }
 
+
     function setToken(iAccessTokenObject $token)
     {
         $this->token = $token;
     }
 
     // Getter:
+
+    function getFullname()
+    {
+        return $this->fullname;
+    }
+
+    function getCredential()
+    {
+        return $this->credential;
+    }
 
     function getUsername()
     {
@@ -77,6 +90,7 @@ class Exists
     {
         return $this->email;
     }
+
 
     /**
      * @ignore
