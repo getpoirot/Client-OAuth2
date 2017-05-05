@@ -74,6 +74,10 @@ class Federation
     /**
      * Get User Account Info By Username
      *
+     * [code:]
+     * $federation->getAccountInfoByUid('58f5f1b45a4eb80012793111')
+     * [/code]
+     *
      * @param string $uid
      *
      * @return array
@@ -91,6 +95,10 @@ class Federation
 
     /**
      * Get User Account Info By UID
+     *
+     * [code:]
+     * $federation->getAccountInfoByUid('payam')
+     * [/code]
      *
      * @param string $username
      *
