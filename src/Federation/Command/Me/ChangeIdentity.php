@@ -1,17 +1,14 @@
 <?php
-namespace Poirot\OAuth2Client\Federation\Command;
+namespace Poirot\OAuth2Client\Federation\Command\Me;
 
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Request\tCommandHelper;
+use Poirot\OAuth2Client\Federation\Command\tTokenAware;
 use Poirot\Std\ConfigurableSetter;
 use Poirot\Std\Hydrator\HydrateGetters;
 
 
-/**
- * Register New User
- *
- */
-class Register
+class ChangeIdentity
     extends ConfigurableSetter
     implements iApiCommand
     , \IteratorAggregate
@@ -19,29 +16,25 @@ class Register
     use tCommandHelper;
     use tTokenAware;
 
-    protected $fullname;
-    protected $credential;
     protected $username;
-    protected $mobile;
     protected $email;
+    protected $mobile;
 
-    protected $token;
 
-
+    /**
+     * Get Namespace
+     *
+     * @ignore Ignored by getterHydrate
+     * @return array
+     */
+    function getNamespace()
+    {
+        return ['me'];
+    }
 
     // Method Arguments
 
     // Setter:
-
-    function setFullname($fullname)
-    {
-        $this->fullname = (string) $fullname;
-    }
-
-    function setCredential($credential)
-    {
-        $this->credential = (string) $credential;
-    }
 
     function setUsername($username)
     {
@@ -61,16 +54,6 @@ class Register
 
     // Getter:
 
-    function getFullname()
-    {
-        return $this->fullname;
-    }
-
-    function getCredential()
-    {
-        return $this->credential;
-    }
-
     function getUsername()
     {
         return $this->username;
@@ -86,8 +69,6 @@ class Register
         return $this->email;
     }
 
-
-    // Implement Hydrator
 
     /**
      * @ignore

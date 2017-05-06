@@ -3,7 +3,6 @@ namespace Poirot\OAuth2Client\Federation\Command;
 
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Request\tCommandHelper;
-use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
 
 
 class AccountInfo
@@ -11,13 +10,12 @@ class AccountInfo
     , \IteratorAggregate
 {
     use tCommandHelper;
+    use tTokenAware;
 
     const TYPE_UID = 'uid';
     const TYPE_USERNAME = 'username';
 
     protected $val;
-
-    protected $token;
 
 
     /**
@@ -32,21 +30,6 @@ class AccountInfo
             $type => $val
         ];
 
-    }
-
-
-    function setToken(iAccessTokenObject $token)
-    {
-        $this->token = $token;
-    }
-
-    /**
-     * @ignore
-     * @return iAccessTokenObject
-     */
-    function getToken()
-    {
-        return $this->token;
     }
 
 

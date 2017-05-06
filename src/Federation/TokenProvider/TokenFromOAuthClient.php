@@ -80,7 +80,8 @@ class TokenFromOAuthClient
 
     function _getTmpFilepath()
     {
-        return sys_get_temp_dir().'/token_stored.dt';
+        $grant = new \ReflectionClass($this->grant);
+        return sys_get_temp_dir().'/token_'.$grant->getShortName().'stored.dt';
     }
 
     function __destruct()

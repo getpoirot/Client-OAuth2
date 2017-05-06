@@ -2,6 +2,7 @@
 namespace Poirot\OAuth2Client;
 
 use Poirot\OAuth2Client\Exception\exIdentifierExists;
+use Poirot\OAuth2Client\Exception\exPasswordNotMatch;
 use Poirot\OAuth2Client\Federation\Command;
 
 use Poirot\ApiClient\aClient;
@@ -11,6 +12,36 @@ use Poirot\OAuth2Client\Client\aOAuthPlatform;
 use Poirot\OAuth2Client\Exception\exTokenMismatch;
 use Poirot\OAuth2Client\Federation\aTokenProvider;
 use Poirot\OAuth2Client\Federation\PlatformRest;
+
+
+/*
+
+// Setup OAuth Client; To Get Token From
+$auth = new \Poirot\OAuth2Client\Client(
+    'http://172.17.0.1:8000/'
+    , 'test@default.axGEceVCtGqZAdW3rc34sqbvTASSTZxD'
+    , 'xPWIpmzBK38MmDRd'
+);
+
+$federation = new \Poirot\OAuth2Client\Federation(
+    'http://172.17.0.1:8000/'
+    , new TokenFromOAuthClient($auth, $auth->withGrant('client_credential'))
+);
+
+// Or To Access Token Owner Part :
+
+$federation = new \Poirot\OAuth2Client\Federation(
+    'http://172.17.0.1:8000/'
+    , new TokenFromOAuthClient($auth, $auth->withGrant('password', [
+        'username' => 'payam',
+        'password' => '123456',
+    ]))
+);
+
+
+$federation -> apiCallMethods(.. Defined as Methods below
+
+*/
 
 
 class Federation
@@ -211,6 +242,79 @@ class Federation
         if ($response->getResponseCode() === 204)
             // No Identifier with given type, value match.
             return null;
+
+        $r = $response->expected();
+        $r = $r->get('result');
+        return $r;
+    }
+
+
+    // Me : Token Owner Specific Endpoints
+    // Token must given to an owner
+
+    /**
+     * Get Token Owner Account Information
+     *
+     * [code:]
+     * $federation->getMyAccountInfo()
+     * [/code]
+     *
+     * @return array
+     */
+    function getMyAccountInfo()
+    {
+        $response = $this->call( new Command\Me\AccountInfo );
+        if ( $ex = $response->hasException() )
+            throw $ex;
+
+        $r = $response->expected();
+        $r = $r->get('result');
+        return $r;
+    }
+
+    /**
+     * Change My Password Determined By Token Owner
+     *
+     * [code:]
+     * try {
+     *  $checkExists = $federation->changeMyPassword('123123', '21123');
+     * } catch (exPasswordNotMatch $e) {
+     *  die ('Current Password You Entered Does Not Match On Server.');
+     * }
+     * [/code]
+     *
+     * @param $newPassword
+     * @param $currentPassword
+     *
+     * @return bool
+     * @throws exPasswordNotMatch
+     */
+    function changeMyPassword($newPassword, $currentPassword)
+    {
+        $response = $this->call( new Command\Me\ChangePassword($newPassword, $currentPassword) );
+        if ( $ex = $response->hasException() )
+            throw $ex;
+
+        return true;
+    }
+
+    /**
+     * Change Identifier such as Email, Mobile, etc ...
+     *
+     * note:
+     * the flow of changing identifier(s) can follow by validation on next steps.
+     *
+     * @param array $changedIdentities
+     *
+     * @return array
+     * @throws exIdentifierExists
+     */
+    function changeMyIdentity(array $changedIdentities)
+    {
+        $response = $this->call( new Command\Me\ChangeIdentity($changedIdentities) );
+        if ( $ex = $response->hasException() )
+            throw $ex;
+
 
         $r = $response->expected();
         $r = $r->get('result');

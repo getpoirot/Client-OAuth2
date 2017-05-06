@@ -113,4 +113,58 @@ class PlatformRest
         $response = $this->_sendViaCurl('POST', $url, $args, $headers);
         return $response;
     }
+
+
+    /**
+     * @param Command\Me\AccountInfo $command
+     * @return iResponse
+     */
+    protected function me_AccountInfo(Command\Me\AccountInfo $command)
+    {
+        $headers = [];
+
+        // Request With Client Credential
+        // As Authorization Header
+        $headers['Authorization'] = 'Bearer '. ( $command->getToken()->getAccessToken() );
+
+        $url = $this->_getServerUrlEndpoints($command);
+        $response = $this->_sendViaCurl('GET', $url, [], $headers);
+        return $response;
+    }
+
+    /**
+     * @param Command\Me\ChangePassword $command
+     * @return iResponse
+     */
+    protected function me_ChangePassword(Command\Me\ChangePassword $command)
+    {
+        $headers = [];
+        $args    = iterator_to_array($command);
+
+        // Request With Client Credential
+        // As Authorization Header
+        $headers['Authorization'] = 'Bearer '. ( $command->getToken()->getAccessToken() );
+
+        $url = $this->_getServerUrlEndpoints($command);
+        $response = $this->_sendViaCurl('POST', $url, $args, $headers);
+        return $response;
+    }
+
+    /**
+     * @param Command\Me\ChangeIdentity $command
+     * @return iResponse
+     */
+    protected function me_ChangeIdentity(Command\Me\ChangeIdentity $command)
+    {
+        $headers = [];
+        $args    = iterator_to_array($command);
+
+        // Request With Client Credential
+        // As Authorization Header
+        $headers['Authorization'] = 'Bearer '. ( $command->getToken()->getAccessToken() );
+
+        $url = $this->_getServerUrlEndpoints($command);
+        $response = $this->_sendViaCurl('POST', $url, $args, $headers);
+        return $response;
+    }
 }

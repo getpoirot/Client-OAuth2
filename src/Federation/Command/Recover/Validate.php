@@ -30,6 +30,7 @@ class Validate
     /**
      * Get Namespace
      *
+     * @ignore Ignored by getterHydrate
      * @return array
      */
     function getNamespace()

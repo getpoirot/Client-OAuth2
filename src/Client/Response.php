@@ -4,6 +4,7 @@ namespace Poirot\OAuth2Client\Client;
 use Poirot\ApiClient\Response\ExpectedJson;
 use Poirot\ApiClient\ResponseOfClient;
 use Poirot\OAuth2Client\Exception\exIdentifierExists;
+use Poirot\OAuth2Client\Exception\exPasswordNotMatch;
 use Poirot\OAuth2Client\Exception\exResponseError;
 use Poirot\OAuth2Client\Exception\exTokenMismatch;
 use Poirot\Std\Struct\DataEntity;
@@ -47,6 +48,9 @@ class Response
                             break;
                         case 'exIdentifierExists':
                             $this->exception = new exIdentifierExists($err['message'], (int) $err['code']);
+                            break;
+                        case 'exPasswordNotMatch':
+                            $this->exception = new exPasswordNotMatch($err['message'], (int) $err['code']);
                             break;
                     }
                 }

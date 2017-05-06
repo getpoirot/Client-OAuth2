@@ -54,6 +54,7 @@ class ServerUrlEndpoints
             case 'register':
                 $base = 'api/v1/members';
                 break;
+
             case 'accountinfo':
                 /** @var Validate $cmMethod */
                 $params = iterator_to_array($command);
@@ -63,6 +64,7 @@ class ServerUrlEndpoints
                     $postfix = current($params);
                 $base = 'api/v1/members/profile/'.$postfix;
                 break;
+
             case 'recover::validate':
                 /** @var Validate $cmMethod */
                 $params = iterator_to_array($command);
@@ -73,11 +75,22 @@ class ServerUrlEndpoints
                 $params = iterator_to_array($command);
                 $base = 'recover/validate/resend/'.$params['validation_code'].'/'.$params['identifier_type'];
                 break;
+
             case 'members::exists':
                 $base = 'api/v1/members/exists';
                 break;
             case 'members::whois':
                 $base = 'api/v1/members/whois';
+                break;
+
+            case 'me::accountinfo':
+                $base = 'api/v1/me/profile';
+                break;
+            case 'me::changepassword':
+                $base = 'api/v1/me/grants/password';
+                break;
+            case 'me::changeidentity':
+                $base = 'api/v1/me/identifiers/change';
                 break;
         }
 

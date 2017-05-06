@@ -3,7 +3,7 @@ namespace Poirot\OAuth2Client\Federation\Command\Members;
 
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Request\tCommandHelper;
-use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
+use Poirot\OAuth2Client\Federation\Command\tTokenAware;
 
 
 /**
@@ -15,6 +15,7 @@ class Whois
     , \IteratorAggregate
 {
     use tCommandHelper;
+    use tTokenAware;
 
     protected $token;
     protected $identifier;
@@ -45,24 +46,7 @@ class Whois
 
 
     // Method Arguments
-
-    // Setter:
-
-    function setToken(iAccessTokenObject $token)
-    {
-        $this->token = $token;
-    }
-
-
-    // Getter:
-
-    /**
-     * @return iAccessTokenObject
-     */
-    function getToken()
-    {
-        return $this->token;
-    }
+    // ...
 
 
     // Implement Hydrator

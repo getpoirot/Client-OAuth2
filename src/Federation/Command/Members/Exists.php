@@ -3,7 +3,7 @@ namespace Poirot\OAuth2Client\Federation\Command\Members;
 
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Request\tCommandHelper;
-use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
+use Poirot\OAuth2Client\Federation\Command\tTokenAware;
 use Poirot\Std\ConfigurableSetter;
 use Poirot\Std\Hydrator\HydrateGetters;
 
@@ -18,6 +18,7 @@ class Exists
     , \IteratorAggregate
 {
     use tCommandHelper;
+    use tTokenAware;
 
     protected $username;
     protected $mobile;
@@ -56,10 +57,6 @@ class Exists
         $this->mobile = $mobile;
     }
 
-    function setToken(iAccessTokenObject $token)
-    {
-        $this->token = $token;
-    }
 
     // Getter:
 
@@ -76,15 +73,6 @@ class Exists
     function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * @ignore
-     * @return iAccessTokenObject
-     */
-    function getToken()
-    {
-        return $this->token;
     }
 
 
