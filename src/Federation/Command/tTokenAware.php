@@ -1,7 +1,7 @@
 <?php
 namespace Poirot\OAuth2Client\Federation\Command;
 
-use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
+use Poirot\ApiClient\Interfaces\Token\iAccessTokenObject;
 
 
 trait tTokenAware

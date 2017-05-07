@@ -1,20 +1,20 @@
 <?php
 namespace Poirot\OAuth2Client;
 
+use Poirot\ApiClient\AccessTokenObject;
 use Poirot\ApiClient\aClient;
 use Poirot\ApiClient\Interfaces\iPlatform;
+use Poirot\ApiClient\Interfaces\Token\iAccessTokenObject;
 use Poirot\OAuth2Client\Client\aOAuthPlatform;
 use Poirot\OAuth2Client\Client\PlatformRest;
 use Poirot\OAuth2Client\Client\Command\GetAuthorizeUrl;
 use Poirot\OAuth2Client\Client\Command\Token;
 use Poirot\OAuth2Client\Grant\aGrantRequest;
 use Poirot\OAuth2Client\Grant\Container\GrantPlugins;
-use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
 use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
 use Poirot\OAuth2Client\Interfaces\iGrantAuthorizeRequest;
 use Poirot\OAuth2Client\Interfaces\iGrantTokenRequest;
 use Poirot\OAuth2Client\Interfaces\ipGrantRequest;
-use Poirot\OAuth2Client\Model\Entity\AccessTokenObject;
 
 
 class Client

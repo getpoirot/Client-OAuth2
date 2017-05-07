@@ -1,14 +1,14 @@
 <?php
 namespace Poirot\OAuth2Client\Federation\TokenProvider;
 
-use Poirot\OAuth2Client\Federation\aTokenProvider;
-use Poirot\OAuth2Client\Interfaces\iAccessTokenObject;
+use Poirot\ApiClient\Interfaces\Token\iAccessTokenObject;
+use Poirot\ApiClient\Interfaces\Token\iTokenProvider;
 use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
 use Poirot\OAuth2Client\Interfaces\iGrantTokenRequest;
 
 
 class TokenFromOAuthClient
-    extends aTokenProvider
+    implements iTokenProvider
 {
     protected $client;
     protected $grant;
@@ -75,6 +75,7 @@ class TokenFromOAuthClient
     {
         file_put_contents($this->_getTmpFilepath(), serialize($this->getToken()));
     }
+
 
     // ..
 

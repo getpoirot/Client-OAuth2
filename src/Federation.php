@@ -1,6 +1,7 @@
 <?php
 namespace Poirot\OAuth2Client;
 
+use Poirot\ApiClient\Interfaces\Token\iTokenProvider;
 use Poirot\OAuth2Client\Exception\exIdentifierExists;
 use Poirot\OAuth2Client\Exception\exPasswordNotMatch;
 use Poirot\OAuth2Client\Federation\Command;
@@ -10,7 +11,6 @@ use Poirot\ApiClient\Interfaces\iPlatform;
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\OAuth2Client\Client\aOAuthPlatform;
 use Poirot\OAuth2Client\Exception\exTokenMismatch;
-use Poirot\OAuth2Client\Federation\aTokenProvider;
 use Poirot\OAuth2Client\Federation\PlatformRest;
 
 
@@ -56,9 +56,9 @@ class Federation
      * Federation constructor.
      *
      * @param string         $baseUrl
-     * @param aTokenProvider $tokenProvider
+     * @param iTokenProvider $tokenProvider
      */
-    function __construct($baseUrl, aTokenProvider $tokenProvider)
+    function __construct($baseUrl, iTokenProvider $tokenProvider)
     {
         $this->baseUrl  = rtrim( (string) $baseUrl, '/' );
         $this->tokenProvider = $tokenProvider;
