@@ -23,7 +23,7 @@ class ServiceOAuthClient
     {
         $conf = $this->_attainConf();
 
-        $baseUrl      = $conf['baseurl'];
+        $baseUrl      = $conf['base_url'];
         $clientID     = $conf['client_id'];
         $clientSecret = @$conf['client_secret'];
         $scopes       = (isset($conf['scopes'])) ? $conf['scopes'] : [];
