@@ -138,14 +138,24 @@ class PlatformRest
         ];
 
         if ($method == 'POST') {
-            $defHeaders += [
+            /*$defHeaders += [
                 'Content-Type: application/x-www-form-urlencoded'
-            ];
+            ];*/
 
             curl_setopt($handle, CURLOPT_POST, true);
             # build request body
-            $urlEncodeData = http_build_query($data);
-            curl_setopt($handle, CURLOPT_POSTFIELDS, $urlEncodeData);
+            foreach ($data as $k => $d) {
+                // Build PHP Array Request Params Compatible With Curl
+                // meta => ['name' => (string)] ---> meta['name'] = (string)
+                if (is_array($d)) {
+                    foreach ($d as $i => $v)
+                        $data[$k.'['.$i.']'] = $v;
+
+                    unset($data[$k]);
+                }
+            }
+
+            curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
 
         } elseif ($method == 'GET') {
             $urlEncodeData = http_build_query($data);
