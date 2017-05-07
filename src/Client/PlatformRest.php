@@ -2,6 +2,7 @@
 namespace Poirot\OAuth2Client\Client;
 
 use Poirot\ApiClient\Exceptions\exConnection;
+use Poirot\ApiClient\Exceptions\exHttpResponse;
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Interfaces\Response\iResponse;
 use Poirot\OAuth2Client\Client\PlatformRest\ServerUrlEndpoints;
@@ -177,10 +178,11 @@ class PlatformRest
 
         $exception = null;
         if (! ($cResponseCode >= 200 && $cResponseCode < 300) ) {
+            $message = null;
             if ($cResponseCode >= 300 && $cResponseCode < 400)
-                $cResponse = 'Response Redirected To Another Uri.';
+                $message = 'Response Redirected To Another Uri.';
 
-            $exception = new exResponseError($cResponse, $cResponseCode);
+            $exception = new exHttpResponse($cResponse, $message, $cResponseCode);
         }
 
         $response = new Response(
