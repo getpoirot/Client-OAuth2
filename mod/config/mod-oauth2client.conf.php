@@ -9,7 +9,7 @@ return [
             'client_id'     => 'test@default.axGEceVCtGqZAdW3rc34sqbvTASSTZxD',
             'client_secret' => 'xPWIpmzBK38MmDRd',
 
-            /** @see \Poirot\OAuth2Client\Authorization */
+            /** @see \Poirot\OAuth2Client\Client */
         ],
 
         ServiceAssertTokenAction::CONF => [

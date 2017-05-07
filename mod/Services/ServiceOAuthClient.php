@@ -3,7 +3,7 @@ namespace Module\OAuth2Client\Services;
 
 use Poirot\Application\aSapi;
 use Poirot\Ioc\Container\Service\aServiceContainer;
-use Poirot\OAuth2Client\Authorization;
+use Poirot\OAuth2Client\Client;
 use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
 use Poirot\Std\Struct\DataEntity;
 
@@ -23,7 +23,12 @@ class ServiceOAuthClient
     {
         $conf = $this->_attainConf();
 
-        return new Authorization($conf);
+        $baseUrl      = $conf['baseurl'];
+        $clientID     = $conf['client_id'];
+        $clientSecret = @$conf['client_secret'];
+        $scopes       = (isset($conf['scopes'])) ? $conf['scopes'] : [];
+
+        return new Client($baseUrl, $clientID, $clientSecret, $scopes);
     }
 
 
