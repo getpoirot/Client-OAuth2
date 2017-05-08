@@ -188,11 +188,11 @@ class PlatformRest
 
         $exception = null;
         if (! ($cResponseCode >= 200 && $cResponseCode < 300) ) {
-            $message = null;
+            $message = $cResponse;
             if ($cResponseCode >= 300 && $cResponseCode < 400)
                 $message = 'Response Redirected To Another Uri.';
 
-            $exception = new exHttpResponse($cResponse, $message, $cResponseCode);
+            $exception = new exHttpResponse($message, $cResponseCode);
         }
 
         $response = new Response(
