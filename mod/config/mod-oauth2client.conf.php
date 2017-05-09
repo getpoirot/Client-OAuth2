@@ -5,7 +5,7 @@ return [
     \Module\OAuth2Client\Module::CONF => [
 
         \Module\OAuth2Client\Services\ServiceOAuthClient::CONF => [
-            'base_url'      => 'http://172.17.0.1:8000/',
+            'base_url'      => 'http://127.0.0.1/',
             'client_id'     => 'test@default.axGEceVCtGqZAdW3rc34sqbvTASSTZxD',
             'client_secret' => 'xPWIpmzBK38MmDRd',
 
