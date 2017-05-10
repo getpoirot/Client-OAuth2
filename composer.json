@@ -10,9 +10,9 @@
         }
     ]
     , "require": {
-      "poirot/api-client": "dev-devel"
-      , "poirot/std": "dev-devel"
-      , "poirot/ioc": "dev-devel"
+      "poirot/api-client": "dev-master"
+      , "poirot/std": "dev-master"
+      , "poirot/ioc": "dev-master"
       , "psr/http-message": "1.0"
     }
     , "suggest": {
@@ -27,7 +27,4 @@
             "src/_functions.php"
         ]
     }
-    ,"repositories": [
-      { "type": "git" ,"url": "https://github.com/phPoirot/Client-OAuth2.git" }
-    ]
 }
