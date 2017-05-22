@@ -24,14 +24,14 @@ class AssertTokenAction
     /**
      * Assert Authorization Token From Request
      *
-     * @param iHttpRequest $request
+     * @param iHttpRequest $httpRequest
      *
      * @return iAccessToken[]
      * @throws exOAuthAccessDenied
      */
-    function __invoke(iHttpRequest $request)
+    function __invoke(iHttpRequest $httpRequest)
     {
-        $token = $this->assertion->parseTokenStrFromRequest( new ServerRequestBridgeInPsr($request) );
+        $token = $this->assertion->parseTokenStrFromRequest( new ServerRequestBridgeInPsr($httpRequest) );
 
         try
         {
