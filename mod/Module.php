@@ -1,8 +1,10 @@
 <?php
 namespace Module\OAuth2Client;
 
+use Module\OAuth2Client\Actions\ServiceAssertTokenAction;
 use Poirot\Application\Interfaces\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
+use Poirot\Http\Interfaces\iHttpRequest;
 use Poirot\Ioc\Container;
 use Poirot\Ioc\Container\BuildContainer;
 use Poirot\Loader\Autoloader\LoaderAutoloadAggregate;
@@ -39,7 +41,6 @@ class Module implements Sapi\iSapiModule
 
 
         require_once __DIR__.'/_functions.php';
-        require_once __DIR__.'/_ioc-facade.php';
     }
 
     /**
@@ -91,3 +92,21 @@ class Module implements Sapi\iSapiModule
         return \Poirot\Config\load(__DIR__ . '/config/mod-oauth2client.actions');
     }
 }
+
+
+    /**
+     * @property ServiceAssertTokenAction $AssertToken
+     *
+     * @method static array AssertToken(iHttpRequest $request)
+     */
+    class Actions extends \IOC
+    { }
+
+
+    use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
+
+    /**
+     * @method static iClientOfOAuth OAuthClient()
+     */
+    class Services extends \IOC
+    { }
