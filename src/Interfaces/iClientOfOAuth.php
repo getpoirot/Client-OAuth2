@@ -1,6 +1,7 @@
 <?php
 namespace Poirot\OAuth2Client\Interfaces;
 
+//use Poirot\ApiClient\Interfaces\Token\iAccessTokenObject;
 use Poirot\OAuth2Client\Grant\aGrantRequest;
 
 
