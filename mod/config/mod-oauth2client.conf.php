@@ -4,14 +4,6 @@ use Module\OAuth2Client\Actions\ServiceAssertTokenAction;
 return [
     \Module\OAuth2Client\Module::CONF => [
 
-        \Module\OAuth2Client\Services\ServiceOAuthClient::CONF => [
-            'base_url'      => 'http://127.0.0.1/',
-            'client_id'     => 'test@default.axGEceVCtGqZAdW3rc34sqbvTASSTZxD',
-            'client_secret' => 'xPWIpmzBK38MmDRd',
-
-            /** @see \Poirot\OAuth2Client\Client */
-        ],
-
         ServiceAssertTokenAction::CONF => [
             'debug_mode' => [
                 // Not Connect to OAuth Server and Used Asserted Token With OwnerObject Below
