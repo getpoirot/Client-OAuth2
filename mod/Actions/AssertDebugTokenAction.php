@@ -10,12 +10,14 @@ class AssertDebugTokenAction
     /**
      * AssertTokenDebug constructor.
      *
-     * @param $tokenSettings
+     * @param array|iAccessToken $token
      */
-    function __construct($tokenSettings)
+    function __construct($token)
     {
-        $this->tokenSettings = $tokenSettings;
+        if (! $token instanceof iAccessToken )
+            $token = new AccessToken($token);
 
+        $this->token = $token;
     }
 
     /**
@@ -25,7 +27,6 @@ class AssertDebugTokenAction
      */
     function __invoke()
     {
-        $token = new AccessToken($this->tokenSettings);
-        return ['token' => $token];
+        return ['token' => $this->token];
     }
 }

@@ -15,7 +15,6 @@ use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 class Module implements Sapi\iSapiModule
     , Sapi\Module\Feature\iFeatureModuleAutoload
-    , Sapi\Module\Feature\iFeatureModuleMergeConfig
     , Sapi\Module\Feature\iFeatureModuleNestActions
     , Sapi\Module\Feature\iFeatureModuleNestServices
 {
@@ -41,23 +40,6 @@ class Module implements Sapi\iSapiModule
 
 
         require_once __DIR__.'/_functions.php';
-    }
-
-    /**
-     * Register config key/value
-     *
-     * priority: 1000 D
-     *
-     * - you may return an array or Traversable
-     *   that would be merge with config current data
-     *
-     * @param iDataEntity $config
-     *
-     * @return array|\Traversable
-     */
-    function initConfig(iDataEntity $config)
-    {
-        return \Poirot\Config\load(__DIR__ . '/config/mod-oauth2client');
     }
 
     /**

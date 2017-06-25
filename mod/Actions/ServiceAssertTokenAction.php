@@ -1,9 +1,9 @@
 <?php
 namespace Module\OAuth2Client\Actions;
 
-use Poirot\Application\aSapi;
 use Poirot\Ioc\Container\Service\aServiceContainer;
-use Poirot\Std\Struct\DataEntity;
+use Poirot\OAuth2Client\Assertion\aAssertToken;
+use Poirot\OAuth2Client\Interfaces\iAccessToken;
 
 
 class ServiceAssertTokenAction
@@ -11,9 +11,18 @@ class ServiceAssertTokenAction
 {
     const CONF = 'ServiceAssertToken';
 
-
     /** @var string Service Name */
-    protected $name = 'assertToken';
+    protected $name = 'AssertToken';
+
+    /** @var aAssertToken */
+    protected $tokenAssertion;
+    protected $debugMode = false;
+    protected $debugToken = [
+        /** @see \Poirot\OAuth2Client\Model\Entity\AccessToken */
+        # 'client_identifier' => 'test',
+        # 'owner_identifier'  => 'test',
+        # 'scopes'            => [ 'test', 'debug', ],
+    ];
 
 
     /**
@@ -23,21 +32,17 @@ class ServiceAssertTokenAction
      */
     function newService()
     {
-        $config = $this->_attainConf();
-
-
         # Check Debug Mode:
 
-        if (isset($config['debug_mode']) && $config['debug_mode']['enabled'])
+        if ( $this->debugMode )
             // Mock Debuging Mode
-            return new AssertDebugTokenAction($config['debug_mode']['token_settings']);
+            return new AssertDebugTokenAction($this->debugToken);
 
 
-        # Assertion Instance From Config
-        $assertion = $config['assertion_rig'];
-        if ( is_string($assertion) )
-            // Defined Service
-            $assertion = $this->services()->get($assertion);
+        if ($this->tokenAssertion)
+            $assertion = $this->tokenAssertion;
+
+        else throw new \RuntimeException('Token Assertion Provider Not Injected.');
 
         $assertAction = new AssertTokenAction($assertion);
         return $assertAction;
@@ -47,22 +52,26 @@ class ServiceAssertTokenAction
     // ..
 
     /**
-     * Attain Merged Module Configuration
-     * @return array
+     * @param boolean $debugMode
      */
-    protected function _attainConf()
+    function setDebugMode($debugMode)
     {
-        $sc     = $this->services();
-        /** @var aSapi $sapi */
-        $sapi   = $sc->get('/sapi');
-        /** @var DataEntity $config */
-        $config = $sapi->config();
-        $config = $config->get(\Module\OAuth2Client\Module::CONF);
+        $this->debugMode = (bool) $debugMode;
+    }
 
-        $r = array();
-        if (is_array($config) && isset($config[static::CONF]))
-            $r = $config[static::CONF];
+    /**
+     * @param iAccessToken|array $debugToken Array allow config files
+     */
+    function setDebugToken($debugToken)
+    {
+        $this->debugToken = $debugToken;
+    }
 
-        return $r;
+    /**
+     * @param aAssertToken $tokenAssertion
+     */
+    function setTokenAssertion(aAssertToken $tokenAssertion)
+    {
+        $this->tokenAssertion = $tokenAssertion;
     }
 }
