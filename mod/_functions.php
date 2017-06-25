@@ -16,7 +16,7 @@ namespace Module\OAuth2Client\Assertion
      */
     function validateAccessToken(iAccessToken $token = null, $tokenCondition)
     {
-        if (!$token instanceof iAccessToken)
+        if (! $token instanceof iAccessToken )
             throw new exOAuthAccessDenied('Token is revoked or mismatch.');
 
 
@@ -26,8 +26,11 @@ namespace Module\OAuth2Client\Assertion
                 throw new exOAuthAccessDenied('Token Not Granted To Resource Owner; But Have To.');
 
             # Check Scopes
-            if (!empty($tokenCondition->scopes)) {
-                // TODO check scopes
+            if (! empty($tokenCondition->scopes) ) {
+                /**
+                 * TODO check scopes
+                 * @link https://github.com/phPoirot/Client-OAuth2/issues/1
+                 */
                 kd(array_intersect($tokenCondition->scopes, $token->getScopes()));
             }
         }

@@ -10,17 +10,36 @@ use Poirot\Ioc\Container\BuildContainer;
 use Poirot\Loader\Autoloader\LoaderAutoloadAggregate;
 use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
 use Poirot\Loader\Interfaces\iLoaderAutoload;
-use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 
+/**
+ * - Provide an OAuthClient as a Service:
+ *   to obtain access token grants..
+ *
+ *   iClientOfOAuth \Module\OAuth2Client\Services::OAuthClient()
+ *
+ *   @see mod-oauth2client.services.conf.php
+ *
+ *
+ * - Token Assertion Action:
+ *   parse token from http request and connect to server for
+ *   token expiration check.
+ *
+ *   has a debug mode action that can be mocked as real assertion one.
+ *
+ *   @see mod-oauth2client.actions.conf.php
+ *
+ *
+ * - Set Of Functions To Check Token Validity:
+ *
+ *   @see _functions.php
+ *
+ */
 class Module implements Sapi\iSapiModule
     , Sapi\Module\Feature\iFeatureModuleAutoload
     , Sapi\Module\Feature\iFeatureModuleNestActions
     , Sapi\Module\Feature\iFeatureModuleNestServices
 {
-    const CONF = 'module.oauth2client';
-
-
     /**
      * Register class autoload on Autoload
      *
@@ -56,7 +75,7 @@ class Module implements Sapi\iSapiModule
      */
     function getServices(Container $moduleContainer = null)
     {
-        $conf = \Poirot\Config\load(__DIR__ . '/config/mod-oauth2client.services');
+        $conf = \Poirot\Config\load(__DIR__ . '/config/mod-oauth2client.services', true);
         return $conf;
     }
 
@@ -71,7 +90,7 @@ class Module implements Sapi\iSapiModule
      */
     function getActions()
     {
-        return \Poirot\Config\load(__DIR__ . '/config/mod-oauth2client.actions');
+        return \Poirot\Config\load(__DIR__ . '/config/mod-oauth2client.actions', true);
     }
 }
 

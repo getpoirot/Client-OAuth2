@@ -43,7 +43,8 @@ class AssertByRemoteServer
     }
 
     /**
-     * // TODO Improve by consider response variant from oauth server
+     * TODO Consider response variant from oauth server
+     * @link https://github.com/phPoirot/Client-OAuth2/issues/2
      *
      * Assert Token String Identifier With OAuth Server
      *
