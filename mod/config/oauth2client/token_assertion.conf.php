@@ -17,5 +17,9 @@ return [
             // Client Argument Attained From Registered Service
             'client' => new \Poirot\Ioc\instance('/module/oauth2client/services/OAuthClient'),
         ]
+        , IOC::GetIoC() // instance token_assertion is belong to tokenAssertion Action
+                        // so instantiated of classes execute through ActionContainer
+                        // that cause to validation against callables, so we pass service
+                        // container itself to instance
     ),
 ];
