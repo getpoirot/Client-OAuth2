@@ -57,6 +57,9 @@ class Response
                     case 'exUnexpectedValue':
                         $this->exception = new exUnexpectedValue($err['message'], (int) $err['code']);
                         break;
+                    case 'exMessageMalformed':
+                        $this->exception = new exUnexpectedValue($err['message'], (int) $err['code']);
+                        break;
                 }
             }
         }
