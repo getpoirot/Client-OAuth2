@@ -36,7 +36,7 @@ namespace Module\OAuth2Client\Assertion
         }
     };
 
-    function funcValidateAccessToken($tokenCondition)
+    function funValidateAccessToken($tokenCondition)
     {
         return function (iAccessToken $token = null) use ($tokenCondition) {
             validateAccessToken($token, $tokenCondition);

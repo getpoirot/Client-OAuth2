@@ -1,9 +1,10 @@
 <?php
 namespace Module\OAuth2Client\Services;
 
-use Poirot\Ioc\Container\Service\aServiceContainer;
-use Poirot\OAuth2Client\Client;
+use Poirot\OAuth2Client;
 use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
+
+use Poirot\Ioc\Container\Service\aServiceContainer;
 
 
 class ServiceOAuthClient
@@ -27,7 +28,7 @@ class ServiceOAuthClient
         $clientSecret = $this->clientSecret;
         $scopes       = ($this->scopes) ? $this->scopes : [];
 
-        return new Client($baseUrl, $clientID, $clientSecret, $scopes);
+        return new OAuth2Client\Client($baseUrl, $clientID, $clientSecret, $scopes);
     }
 
 

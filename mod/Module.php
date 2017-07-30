@@ -1,15 +1,17 @@
 <?php
 namespace Module\OAuth2Client;
 
-use Module\OAuth2Client\Actions\ServiceAssertTokenAction;
+use Module\OAuth2Client\Actions\AssertTokenAction;
+use Module\OAuth2Client\Services\ServiceAuthenticatorToken;
+use Poirot\Std\Interfaces\Struct\iDataEntity;
 use Poirot\Application\Interfaces\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
-use Poirot\Http\Interfaces\iHttpRequest;
 use Poirot\Ioc\Container;
 use Poirot\Ioc\Container\BuildContainer;
 use Poirot\Loader\Autoloader\LoaderAutoloadAggregate;
 use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
 use Poirot\Loader\Interfaces\iLoaderAutoload;
+use Module\OAuth2Client\Actions\ServiceAssertTokenAction;
 
 
 /**
@@ -27,19 +29,31 @@ use Poirot\Loader\Interfaces\iLoaderAutoload;
  *
  *   has a debug mode action that can be mocked as real assertion one.
  *
+ *   iAccessToken|null \Module\OAuth2Client\Actions\AssertToken(ServerRequestInterface $HttpRequestPsr)
+ *
  *   @see mod-oauth2client.actions.conf.php
  *
  *
  * - Set Of Functions To Check Token Validity:
- *
  *   @see _functions.php
  *
+ *
+ * - Provide an Authenticator for token based authorization
+ *
+ *   it has an FulfillmentLazy with companion of Federation Client
+ *   retrieve User Profile Into Auth. Identity.
+ *
+ *   @see ServiceAuthenticatorToken
  */
 class Module implements Sapi\iSapiModule
     , Sapi\Module\Feature\iFeatureModuleAutoload
+    , Sapi\Module\Feature\iFeatureModuleMergeConfig
     , Sapi\Module\Feature\iFeatureModuleNestActions
     , Sapi\Module\Feature\iFeatureModuleNestServices
 {
+    const AUTHENTICATOR = 'oauth2client.authenticator.token';
+
+
     /**
      * Register class autoload on Autoload
      *
@@ -59,6 +73,14 @@ class Module implements Sapi\iSapiModule
 
 
         require_once __DIR__.'/_functions.php';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    function initConfig(iDataEntity $config)
+    {
+        return \Poirot\Config\load(__DIR__ . '/config/mod-oauth2client');
     }
 
     /**
@@ -95,10 +117,13 @@ class Module implements Sapi\iSapiModule
 }
 
 
+    use Poirot\OAuth2Client\Interfaces\iAccessToken;
+    use Psr\Http\Message\ServerRequestInterface;
+
     /**
      * @property ServiceAssertTokenAction $AssertToken
      *
-     * @method static array AssertToken(iHttpRequest $request)
+     * @method static iAccessToken|null|AssertTokenAction AssertToken(ServerRequestInterface $HttpRequestPsr = null)
      */
     class Actions extends \IOC
     { }

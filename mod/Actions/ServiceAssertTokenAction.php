@@ -3,14 +3,14 @@ namespace Module\OAuth2Client\Actions;
 
 use Poirot\Ioc\Container\Service\aServiceContainer;
 use Poirot\OAuth2Client\Assertion\aAssertToken;
+use Poirot\OAuth2Client\Assertion\AssertByInternalServer;
+use Poirot\OAuth2Client\Assertion\AssertByRemoteServer;
 use Poirot\OAuth2Client\Interfaces\iAccessToken;
 
 
 class ServiceAssertTokenAction
     extends aServiceContainer
 {
-    const CONF = 'ServiceAssertToken';
-
     /** @var string Service Name */
     protected $name = 'AssertToken';
 
@@ -35,7 +35,7 @@ class ServiceAssertTokenAction
         # Check Debug Mode:
 
         if ( $this->debugMode )
-            // Mock Debuging Mode
+            // Mock Debug Mode
             return new AssertDebugTokenAction($this->debugToken);
 
 
@@ -68,6 +68,15 @@ class ServiceAssertTokenAction
     }
 
     /**
+     * Token Assertion Must Given
+     *
+     * usually it can be:
+     * - AssertByRemoteServer
+     * - AssertByInternalServer
+     *
+     * @see AssertByRemoteServer
+     * @see AssertByInternalServer
+     *
      * @param aAssertToken $tokenAssertion
      */
     function setTokenAssertion(aAssertToken $tokenAssertion)

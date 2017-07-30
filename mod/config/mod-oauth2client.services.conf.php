@@ -9,8 +9,8 @@ return [
         'OAuthClient' => new \Poirot\Ioc\instance(
             ServiceOAuthClient::class,
             \Poirot\Std\catchIt(function () {
-                if (false === $c = \Poirot\Config\load(__DIR__.'/oauth2client/server_credential'))
-                    throw new \Exception('Config (oauth2client/server_credential) not loaded.');
+                if (false === $c = \Poirot\Config\load(__DIR__.'/oauth2client/client_credential'))
+                    throw new \Exception('Config (oauth2client/client_credential) not loaded.');
 
                 return $c->value;
             })

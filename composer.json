@@ -17,6 +17,7 @@
     }
     , "suggest": {
       "poirot/psr7-http": "PSR-7 HTTP Implementation."
+      , "poirot/mod-authorization": "Integrated Authentication Mechanism Based On Tokens."
     }
     , "autoload"  : {
         "psr-4": {

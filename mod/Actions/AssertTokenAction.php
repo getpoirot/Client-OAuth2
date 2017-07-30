@@ -1,13 +1,19 @@
 <?php
 namespace Module\OAuth2Client\Actions;
 
-use Poirot\Http\Interfaces\iHttpRequest;
-use Poirot\Http\Psr\ServerRequestBridgeInPsr;
 use Poirot\OAuth2Client\Assertion\aAssertToken;
 use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
 use Poirot\OAuth2Client\Interfaces\iAccessToken;
+use Psr\Http\Message\ServerRequestInterface;
 
 
+/**
+ * Note:
+ *
+ * Usually it constructed from related service
+ * @see ServiceAssertTokenAction
+ *
+ */
 class AssertTokenAction
 {
     protected $assertion;
@@ -24,14 +30,17 @@ class AssertTokenAction
     /**
      * Assert Authorization Token From Request
      *
-     * @param iHttpRequest $httpRequest
+     * @param ServerRequestInterface $HttpRequestPsr
      *
-     * @return iAccessToken[]
-     * @throws exOAuthAccessDenied
+     * @return iAccessToken|null
      */
-    function __invoke(iHttpRequest $httpRequest)
+    function __invoke(ServerRequestInterface $HttpRequestPsr = null)
     {
-        $token = $this->assertion->parseTokenStrFromRequest( new ServerRequestBridgeInPsr($httpRequest) );
+        if ($HttpRequestPsr === null)
+            return $this;
+
+
+        $token = $this->assertion->parseTokenStrFromRequest( $HttpRequestPsr );
 
         try
         {
@@ -48,6 +57,14 @@ class AssertTokenAction
             $token = null;
         }
 
-        return ['token' => $token];
+        return $token;
+    }
+
+    /**
+     * @return aAssertToken
+     */
+    function assertion()
+    {
+        return $this->assertion;
     }
 }
