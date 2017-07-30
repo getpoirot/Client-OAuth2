@@ -3,6 +3,7 @@ namespace Module\OAuth2Client\Services\Authenticate;
 
 use Poirot\Ioc\Container\Service\aServiceContainer;
 use Poirot\OAuth2Client\Federation\TokenProvider\TokenFromOAuthClient;
+use Poirot\OAuth2Client\Grant\Container\GrantPlugins;
 
 
 class ServiceIdentityProviderFederation
@@ -21,7 +22,7 @@ class ServiceIdentityProviderFederation
         $authClient = \Module\OAuth2Client\Services::OAuthClient();
         $federation = new \Poirot\OAuth2Client\Federation(
             $this->oauthFederationAddress
-            , new TokenFromOAuthClient($authClient, $authClient->withGrant('client_credential'))
+            , new TokenFromOAuthClient($authClient, $authClient->withGrant(GrantPlugins::CLIENT_CREDENTIALS))
         );
 
 
