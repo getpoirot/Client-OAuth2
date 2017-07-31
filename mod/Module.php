@@ -2,7 +2,6 @@
 namespace Module\OAuth2Client;
 
 use Module\OAuth2Client\Actions\AssertTokenAction;
-use Module\OAuth2Client\Services\ServiceAuthenticatorToken;
 use Poirot\Std\Interfaces\Struct\iDataEntity;
 use Poirot\Application\Interfaces\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;

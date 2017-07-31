@@ -36,6 +36,6 @@ abstract class aAssertToken
      */
     function parseTokenStrFromRequest(ServerRequestInterface $request)
     {
-        return $this->parseTokenStrFromRequest($request);
+        return \Poirot\OAuth2Client\parseTokenStrFromRequest($request);
     }
 }

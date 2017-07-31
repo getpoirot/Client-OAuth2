@@ -1,5 +1,5 @@
 <?php
-namespace Module\OAuth2Client\Services;
+namespace Module\OAuth2Client\Services\Authenticators;
 
 use Module\Authorization\Services\ContainerAuthenticatorsCapped;
 use Module\OAuth2Client\Authenticate\IdentifierHttpToken;
@@ -10,6 +10,17 @@ use Poirot\AuthSystem\Authenticate\Interfaces\iProviderIdentityData;
 use Poirot\Http\Interfaces\iHttpRequest;
 use Poirot\Ioc\Container\Service\aServiceContainer;
 
+
+/*
+ * Usage:
+ *
+ * $auth = \Module\Authorization\Actions::Authenticator( Module\OAuth2Client\Module::AUTHENTICATOR );
+ * if ( $auth->hasAuthenticated() ) {
+ *    $identity = $auth->identifier()->withIdentity();
+ *    echo 'Hello '.$identity->user->full_name;
+ * }
+ *
+ */
 
 class ServiceAuthenticatorToken
     extends aServiceContainer
