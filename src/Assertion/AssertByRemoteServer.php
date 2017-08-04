@@ -9,6 +9,7 @@ use Poirot\OAuth2Client\Model\Entity\AccessToken;
 use Poirot\Std\Hydrator\HydrateGetters;
 
 
+// TODO an options construct to set whether retrieve meta data included or not
 /**
  * Validate Authorize By Registered Extension Grant
  * it will send http request of grant type match with
@@ -86,6 +87,8 @@ class AssertByRemoteServer
             ->setClientIdentifier(@$result['client_id'])
             ->setOwnerIdentifier(@$result['resource_owner'])
             ->setScopes(explode(' ', @$result['scopes']))
+
+            ->setMeta($result['meta'])
         ;
 
         return $tokenEntity;
