@@ -127,7 +127,7 @@ class Client
             $grant = clone $grantTypeName;
             $grant->with($grant::parseWith($options));
         } else {
-            $grant = $this->_grantPlugins()->fresh($grantTypeName, $options);
+            $grant = $this->plugins()->fresh($grantTypeName, $options);
         }
 
         return $grant;
@@ -170,7 +170,7 @@ class Client
 
     // ..
 
-    protected function _grantPlugins()
+    function plugins()
     {
         if (! $this->grantPlugins )
             $this->grantPlugins = new GrantPlugins;
