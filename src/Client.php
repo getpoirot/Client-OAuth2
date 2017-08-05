@@ -21,7 +21,7 @@ class Client
     extends aClient
     implements iClientOfOAuth
 {
-    protected $baseUrl;
+    protected $serverUrl;
     protected $clientId;
     protected $clientSecret;
     protected $defaultScopes = [];
@@ -34,14 +34,14 @@ class Client
     /**
      * Client constructor.
      *
-     * @param string $baseUrl      Server base url http://172.17.0.1/auth
+     * @param string $serverUrl     Server base url http://172.17.0.1/auth
      * @param string $clientId     Client ID Given by OAuth Server
      * @param string $clientSecret Client Secret
      * @param array $defaultScopes Default scopes when request token
      */
-    function __construct($baseUrl, $clientId, $clientSecret = null, array $defaultScopes = [])
+    function __construct($serverUrl, $clientId, $clientSecret = null, array $defaultScopes = [])
     {
-        $this->baseUrl  = rtrim( (string) $baseUrl, '/' );
+        $this->serverUrl  = rtrim( (string) $serverUrl, '/' );
         $this->clientId = (string) $clientId;
         $this->clientSecret = $clientSecret;
         $this->defaultScopes = $defaultScopes;
@@ -162,7 +162,7 @@ class Client
 
 
         # Default Options Overriding
-        $this->platform->setServerUrl( $this->baseUrl );
+        $this->platform->setServerUrl( $this->serverUrl );
 
         return $this->platform;
     }
