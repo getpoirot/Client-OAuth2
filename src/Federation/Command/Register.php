@@ -24,6 +24,7 @@ class Register
     protected $username;
     protected $mobile;
     protected $email;
+    protected $meta;
 
     protected $token;
 
@@ -58,6 +59,11 @@ class Register
         $this->mobile = $mobile;
     }
 
+    function setMeta($meta)
+    {
+        $this->meta = $meta;
+    }
+
 
     // Getter:
 
@@ -84,6 +90,14 @@ class Register
     function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @return array
+     */
+    function getMeta()
+    {
+        return $this->meta;
     }
 
 

@@ -12,6 +12,7 @@ use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\OAuth2Client\Client\aOAuthPlatform;
 use Poirot\OAuth2Client\Exception\exTokenMismatch;
 use Poirot\OAuth2Client\Federation\PlatformRest;
+use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 
 /*
@@ -82,15 +83,16 @@ class Federation
      * @param string $fullname
      * @param string $credential
      * @param array  $identifiers
+     * @param array  $meta        Meta Embed Data
      *
      * @return array
-     * @throws exIdentifierExists When given identifier exists
      */
-    function newUser($fullname, $credential, array $identifiers)
+    function newUser($fullname, $credential, array $identifiers, array $meta = null)
     {
         $args = [
             'fullname'   => $fullname,
             'credential' => $credential,
+            'meta'       => $meta,
         ] + $identifiers;
 
         $response = $this->call( new Command\Register($args) );
@@ -98,7 +100,7 @@ class Federation
             throw $ex;
 
         $r = $response->expected();
-        $r = $r->get('result');
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
         return $r;
     }
 
