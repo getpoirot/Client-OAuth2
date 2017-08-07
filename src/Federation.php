@@ -122,7 +122,7 @@ class Federation
             throw $ex;
 
         $r = $response->expected();
-        $r = $r->get('result');
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
         return $r;
     }
 
@@ -144,7 +144,7 @@ class Federation
             throw $ex;
 
         $r = $response->expected();
-        $r = $r->get('result');
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
         return $r;
     }
 
@@ -173,7 +173,7 @@ class Federation
             throw $ex;
 
         $r = $response->expected();
-        $r = $r->get('result');
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
         return $r;
     }
 
@@ -196,7 +196,7 @@ class Federation
             throw $ex;
 
         $r = $response->expected();
-        $r = $r->get('result');
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
         return $r;
     }
 
@@ -214,7 +214,7 @@ class Federation
             throw $ex;
 
         $r = $response->expected();
-        $r = $r->get('result');
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
         return $r;
     }
 
@@ -246,7 +246,7 @@ class Federation
             return null;
 
         $r = $response->expected();
-        $r = $r->get('result');
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
         return $r;
     }
 
@@ -270,7 +270,7 @@ class Federation
             throw $ex;
 
         $r = $response->expected();
-        $r = $r->get('result');
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
         return $r;
     }
 
@@ -319,7 +319,7 @@ class Federation
 
 
         $r = $response->expected();
-        $r = $r->get('result');
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
         return $r;
     }
 
