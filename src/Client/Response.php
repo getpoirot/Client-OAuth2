@@ -42,8 +42,9 @@ class Response
 
         if ($this->exception instanceof exHttpResponse) {
             // Determine Known Errors ...
+            // TODO Sometimes we can has an error on server itself; handle this types of error
             $expected = $this->expected();
-            if ($expected && $err =  $expected->get('error') ) {
+            if ($expected && $err = $expected->get('error') ) {
                 switch ($err['state']) {
                     case 'exOAuthAccessDenied':
                         $this->exception = new exTokenMismatch($err['message'], (int) $err['code']);
