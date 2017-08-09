@@ -7,6 +7,7 @@ use Poirot\ApiClient\ResponseOfClient;
 use Poirot\OAuth2Client\Exception\exIdentifierExists;
 use Poirot\OAuth2Client\Exception\exPasswordNotMatch;
 use Poirot\OAuth2Client\Exception\exResponseError;
+use Poirot\OAuth2Client\Exception\exServerError;
 use Poirot\OAuth2Client\Exception\exTokenMismatch;
 use Poirot\OAuth2Client\Exception\exUnexpectedValue;
 use Poirot\Std\Struct\DataEntity;
@@ -99,6 +100,6 @@ class Response
             return new ExpectedJson;
 
 
-        return null;
+        throw new exServerError($this->rawBody);
     }
 }
