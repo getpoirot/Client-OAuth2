@@ -26,27 +26,25 @@ class Response
         // Check exception from raw response
         // Server Response Status is 200 but Logical Error May Happen And Returned in Response Body
         if (! $this->exception ) {
-            $date = $this->expected();
-            if ($date instanceof DataEntity) {
+            $res = $this->expected();
+            if ($res instanceof DataEntity) {
                 // Response Body Can parsed To Data Structure
-                if ( $exception = $date->get('error') ) {
+                if ( $exception = $res->get('error') ) {
                     $this->exception = new \Exception(
-                        $date->get('error_description')
+                        $res->get('error_description')
                         .' '
-                        .$date->get('hint')
+                        .$res->get('hint')
 
                         , 400
                     );
                 }
             }
-        }
-
-        if ($this->exception instanceof exHttpResponse) {
+        } else if ($this->exception instanceof exHttpResponse) {
             // Determine Known Errors ...
             // TODO Sometimes we can has an error on server itself; handle this types of error
             $expected = $this->expected();
             if ($expected && $err = $expected->get('error') ) {
-                switch ($err['state']) {
+                switch (@$err['state']) {
                     case 'exOAuthAccessDenied':
                         $this->exception = new exTokenMismatch($err['message'], (int) $err['code']);
                         break;
@@ -99,6 +97,12 @@ class Response
             // Retrieve Json Parsed Data Result
             return new ExpectedJson;
 
+
+        if ($this->responseCode == 204) {
+            return function() {
+                return null;
+            };
+        }
 
         throw new exServerError($this->rawBody);
     }
