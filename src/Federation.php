@@ -324,6 +324,22 @@ class Federation
     }
 
 
+    // Options
+
+    /**
+     * Set Token Provider
+     *
+     * @param iTokenProvider $tokenProvider
+     *
+     * @return $this
+     */
+    function setTokenProvider(iTokenProvider $tokenProvider)
+    {
+        $this->tokenProvider = $tokenProvider;
+        return $this;
+    }
+
+
     // Implement aClient
 
     /**
