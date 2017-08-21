@@ -54,7 +54,9 @@ class AssertTokenAction
                 // its not accessDenied exception
                 throw $e;
 
-            $token = null;
+
+            // Invalid Token
+            $token = false;
         }
 
         return $token;
