@@ -14,10 +14,14 @@ namespace Module\OAuth2Client\Assertion
      *
      * @throws exOAuthAccessDenied
      */
-    function validateAccessToken(iAccessToken $token = null, $tokenCondition)
+    function validateAccessToken($token = null, $tokenCondition)
     {
-        if (! $token instanceof iAccessToken )
+        if (! $token instanceof iAccessToken ) {
+            if ($token === null)
+                throw new exOAuthAccessDenied('Token has to be send.');
+
             throw new exOAuthAccessDenied('Token is revoked or mismatch.');
+        }
 
 
         if ($tokenCondition) {
