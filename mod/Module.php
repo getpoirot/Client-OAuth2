@@ -115,7 +115,7 @@ class Module implements Sapi\iSapiModule
     }
 }
 
-
+    use Poirot\OAuth2Client\Federation;
     use Poirot\OAuth2Client\Interfaces\iAccessToken;
     use Psr\Http\Message\ServerRequestInterface;
 
@@ -132,6 +132,7 @@ class Module implements Sapi\iSapiModule
 
     /**
      * @method static iClientOfOAuth OAuthClient()
+     * @method static Federation     OAuthFederate()
      */
     class Services extends \IOC
     { }
