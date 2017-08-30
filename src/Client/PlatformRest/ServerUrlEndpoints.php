@@ -56,13 +56,16 @@ class ServerUrlEndpoints
                 break;
 
             case 'accountinfo':
-                /** @var Validate $cmMethod */
                 $params = iterator_to_array($command);
                 if (isset($params['username']))
                     $postfix = '@'.$params['username'];
                 else
                     $postfix = current($params);
                 $base = 'api/v1/members/profile/'.$postfix;
+                break;
+
+            case 'listaccountsinfo':
+                $base = 'api/v1/members/profiles';
                 break;
 
             case 'recover::validate':

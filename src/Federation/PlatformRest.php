@@ -49,6 +49,25 @@ class PlatformRest
     }
 
     /**
+     * @param Command\ListAccountsInfo $command
+     * @return iResponse
+     */
+    protected function _ListAccountsInfo(Command\ListAccountsInfo $command)
+    {
+        $headers = [];
+        $args    = iterator_to_array($command);
+
+        // Request With Client Credential
+        // As Authorization Header
+        $headers['Authorization'] = 'Bearer '. ( $command->getToken()->getAccessToken() );
+
+
+        $url = $this->_getServerUrlEndpoints($command);
+        $response = $this->_sendViaCurl('POST', $url, $args, $headers);
+        return $response;
+    }
+
+    /**
      * @param Command\Recover\Validate $command
      * @return \Poirot\OAuth2Client\Client\Response
      */

@@ -127,6 +127,24 @@ class Federation
     }
 
     /**
+     * List Users Profile Info By UIDs
+     *
+     * @param array $uids
+     *
+     * @return array
+     */
+    function listAccountsInfoByUIDs(array $uids)
+    {
+        $response = $this->call( new Command\ListAccountsInfo($uids) );
+        if ( $ex = $response->hasException() )
+            throw $ex;
+
+        $r = $response->expected();
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
+        return $r;
+    }
+
+    /**
      * Get User Account Info By UID
      *
      * [code:]
