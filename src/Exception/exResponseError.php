@@ -1,6 +1,7 @@
 <?php
 namespace Poirot\OAuth2Client\Exception;
 
+
 class exResponseError
     extends \RuntimeException
 {

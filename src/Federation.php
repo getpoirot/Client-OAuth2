@@ -411,9 +411,7 @@ recall:
         }
 
 
-        $platform = $this->platform();
-        $platform = $platform->withCommand($command);
-        $response = $platform->send();
+        $response = parent::call($command);
 
         if ($ex = $response->hasException()) {
 

@@ -55,7 +55,6 @@ class TokenFromOAuthClient
     function exchangeToken()
     {
         $this->isTokenExchanged = true;
-
         $token = $this->client->attainAccessToken( $this->grant );
         return $this->token = $token;
     }
