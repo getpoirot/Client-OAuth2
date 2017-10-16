@@ -59,9 +59,16 @@ class AssertByRemoteServer
      */
     function assertToken($tokenStr)
     {
-        $tokenObject = $this->client->attainAccessToken(
-            $this->client->withGrant( new GrantExtension, ['token' => $tokenStr] )
-        );
+        try {
+            $tokenObject = $this->client->attainAccessToken(
+                $this->client->withGrant( new GrantExtension, ['token' => $tokenStr] )
+            );
+
+        } catch(\Exception $e) {
+            // Catch OAuth Exceptions Only
+            throw new exOAuthAccessDenied;
+        }
+
 
         if (! $tokenEmbededMeta = json_decode( $tokenObject->getAccessToken(), true) )
             throw new \RuntimeException('Mismatch Token Response Structure Data; cant parse extra.');

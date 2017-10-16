@@ -29,6 +29,7 @@ class Response
             if ($res instanceof DataEntity) {
                 // Response Body Can parsed To Data Structure
                 if ( $exception = $res->get('error') ) {
+                    // TODO handle token revoke exceptions; OAuth Exceptions
                     $this->exception = new \Exception(
                         $res->get('error_description')
                         .' '
