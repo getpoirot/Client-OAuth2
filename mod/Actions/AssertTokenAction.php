@@ -44,8 +44,9 @@ class AssertTokenAction
 
         try
         {
-            if ($token)
+            if ($token) {
                 $token = $this->assertion->assertToken($token);
+            }
 
         } catch (exOAuthAccessDenied $e) {
             // any oauth server error will set token result to false

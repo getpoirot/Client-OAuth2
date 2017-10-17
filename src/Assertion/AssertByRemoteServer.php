@@ -87,9 +87,10 @@ class AssertByRemoteServer
             ->setClientIdentifier(@$result['client_id'])
             ->setOwnerIdentifier(@$result['resource_owner'])
             ->setScopes(explode(' ', @$result['scopes']))
-
-            ->setMeta($result['meta'])
         ;
+
+        if (isset($result['meta']))
+            $tokenEntity->setMeta( $result['meta'] );
 
         return $tokenEntity;
     }

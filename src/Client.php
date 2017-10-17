@@ -32,6 +32,7 @@ class Client
 
 
     /**
+     * // TODO Scopes not work when we request scopes return empty array
      * Client constructor.
      *
      * @param string $serverUrl     Server base url http://172.17.0.1/auth

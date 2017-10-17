@@ -29,12 +29,13 @@ class Response
             if ($res instanceof DataEntity) {
                 // Response Body Can parsed To Data Structure
                 if ( $exception = $res->get('error') ) {
-                    $this->exception = new \Exception(
+                    // TODO handle token revoke exceptions; OAuth Exceptions
+                    $this->exception = new exTokenMismatch(
                         $res->get('error_description')
                         .' '
                         .$res->get('hint')
 
-                        , 400
+                        , 401
                     );
                 }
             }
