@@ -9,6 +9,7 @@ use Poirot\OAuth2Client\Exception\exPasswordNotMatch;
 use Poirot\OAuth2Client\Exception\exServerError;
 use Poirot\OAuth2Client\Exception\exTokenMismatch;
 use Poirot\OAuth2Client\Exception\exUnexpectedValue;
+use Poirot\OAuth2Client\Exception\exUserNotFound;
 use Poirot\Std\Struct\DataEntity;
 
 
@@ -41,10 +42,12 @@ class Response
             }
         } else if ($this->exception instanceof exHttpResponse) {
             // Determine Known Errors ...
-            // TODO Sometimes we can has an error on server itself; handle this types of error
             $expected = $this->expected();
             if ($expected && $err = $expected->get('error') ) {
                 switch (@$err['state']) {
+                    case 'exUserNotFound':
+                        $this->exception = new exUserNotFound($err['message'], (int) $err['code']);
+                        break;
                     case 'exOAuthAccessDenied':
                         $this->exception = new exTokenMismatch($err['message'], (int) $err['code']);
                         break;
