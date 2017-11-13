@@ -1,6 +1,7 @@
 <?php
 namespace Poirot\OAuth2Client\Assertion;
 
+use Poirot\ApiClient\Exceptions\exConnection;
 use Poirot\OAuth2Client\Assertion\RemoteServer\GrantExtension;
 use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
 use Poirot\OAuth2Client\Interfaces\iAccessToken;
@@ -43,6 +44,7 @@ class AssertByRemoteServer
         $this->client = $client;
     }
 
+
     /**
      * TODO Consider response variant from oauth server
      * @link https://github.com/phPoirot/Client-OAuth2/issues/2
@@ -63,6 +65,10 @@ class AssertByRemoteServer
             $tokenObject = $this->client->attainAccessToken(
                 $this->client->withGrant( new GrantExtension, ['token' => $tokenStr] )
             );
+
+        } catch (exConnection $e) {
+            // Connection Error!!
+            throw $e;
 
         } catch(\Exception $e) {
             // Catch OAuth Exceptions Only
