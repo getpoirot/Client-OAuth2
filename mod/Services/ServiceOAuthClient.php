@@ -65,5 +65,4 @@ class ServiceOAuthClient
     {
         $this->scopes = $scopes;
     }
-
 }

@@ -1,11 +1,15 @@
 <?php
+use Module\Authorization\Services\ServiceAuthenticatorsContainer;
 use Module\OAuth2Client\Services\Authenticate\ServiceIdentityProviderFederation;
 use Module\OAuth2Client\Services\Authenticators\ServiceAuthenticatorToken;
 
 return [
-    'module.authorization' => [
-        # ServiceAuthenticatorsContainer::CONF
-        'authenticators' => [
+
+    ## Authenticator:
+    #
+    \Module\Authorization\Module::CONF => [
+
+        ServiceAuthenticatorsContainer::CONF => [
             'plugins_container' => [
                 'services' => [
                     // Authenticators Services
@@ -15,13 +19,13 @@ return [
                         // Link @user_profile
                         'identity_provider' => new \Poirot\Ioc\instance(
                             ServiceIdentityProviderFederation::class
-                            , [ 'federation_address' => 'http://127.0.0.1/' ]
                         )
                     ],
                 ],
             ],
         ],
     ],
+
 ];
 
 /**

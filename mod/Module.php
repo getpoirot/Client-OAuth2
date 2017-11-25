@@ -42,6 +42,7 @@ use Module\OAuth2Client\Actions\ServiceAssertTokenAction;
  *   it has an FulfillmentLazy with companion of Federation Client
  *   retrieve User Profile Into Auth. Identity.
  *
+ *   @see mod-oauth2client.conf
  *   @see ServiceAuthenticatorToken
  */
 class Module implements Sapi\iSapiModule

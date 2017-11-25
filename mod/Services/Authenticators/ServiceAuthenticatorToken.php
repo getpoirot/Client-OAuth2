@@ -16,9 +16,10 @@ use Poirot\Ioc\Container\Service\aServiceContainer;
  *
  * $auth = \Module\Authorization\Actions::Authenticator( Module\OAuth2Client\Module::AUTHENTICATOR );
  * if ( $auth->hasAuthenticated() ) {
- *    $identity = $auth->identifier()->withIdentity();
- *    echo 'Hello '.$identity->user->full_name;
- * }
+      $identity = $auth->identifier()->withIdentity();
+      $user = $identity->user;
+      echo 'Hello '.(isset($user['full_name']) ? $user['full_name'] : '@'.$user['username']);
+   }
  *
  */
 
