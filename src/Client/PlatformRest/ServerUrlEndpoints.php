@@ -58,9 +58,9 @@ class ServerUrlEndpoints
             case 'accountinfo':
                 $params = iterator_to_array($command);
                 if (isset($params['username']))
-                    $postfix = '@'.$params['username'];
+                    $postfix = '/u/'.$params['username'];
                 else
-                    $postfix = current($params);
+                    $postfix = '-'.current($params);
                 $base = 'api/v1/members/profile/'.$postfix;
                 break;
 
