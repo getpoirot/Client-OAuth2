@@ -4,6 +4,7 @@ namespace Poirot\OAuth2Client\Federation\Command\Members;
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
 use Poirot\ApiClient\Request\tCommandHelper;
 use Poirot\OAuth2Client\Federation\Command\tTokenAware;
+use Poirot\Std\Type\StdTravers;
 
 
 /**
@@ -28,9 +29,13 @@ class Whois
      */
     function __construct($identifierType, $identifierValue)
     {
-        $this->identifier = array(
+        if ($identifierValue instanceof \Traversable)
+            $identifierValue = StdTravers::of($identifierValue)->toArray();
+
+
+        $this->identifier = [
             $identifierType => $identifierValue
-        );
+        ];
     }
 
     /**
