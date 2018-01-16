@@ -3,6 +3,11 @@ use Module\Authorization\Services\ServiceAuthenticatorsContainer;
 use Module\OAuth2Client\Services\Authenticate\ServiceIdentityProviderFederation;
 use Module\OAuth2Client\Services\Authenticators\ServiceAuthenticatorToken;
 
+if (! class_exists('\Module\Authorization\Module') )
+    // Authorization Module Not Loaded/Enabled!!
+    return [];
+
+
 return [
 
     ## Authenticator:
