@@ -175,7 +175,8 @@ class PlatformRest
         if ($curl_errno = curl_errno($handle)) {
             // Connection Error
             $curl_error = curl_error($handle);
-            throw new exConnection($curl_error, $curl_errno);
+            $errorMessage = $curl_error.' '."When $method: $url";
+            throw new exConnection($errorMessage, $curl_errno);
         }
 
         $exception = null;
