@@ -9,6 +9,8 @@ class ClientCredential
     extends aGrantRequest
     implements iGrantTokenRequest
 {
+    const GRANT_TYPE = 'client_credentials';
+
     protected $code;
     protected $state;
     protected $redirectUri;
@@ -22,7 +24,7 @@ class ClientCredential
      */
     function getGrantType()
     {
-        return 'client_credentials';
+        return self::GRANT_TYPE;
     }
 
 

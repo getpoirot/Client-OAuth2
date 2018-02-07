@@ -10,6 +10,8 @@ class GrantSingleSignIn
     extends aGrantRequest
     implements iGrantTokenRequest
 {
+    const GRANT_TYPE = 'onetime_code';
+
     protected $mobile;
     protected $clientSecret;
 
@@ -22,7 +24,7 @@ class GrantSingleSignIn
      */
     function getGrantType()
     {
-        return 'onetime_code';
+        return self::GRANT_TYPE;
     }
 
 

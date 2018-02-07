@@ -11,6 +11,8 @@ class AuthorizeCode
     implements iGrantAuthorizeRequest
     , iGrantTokenRequest
 {
+    const GRANT_TYPE = 'authorization_code';
+
     protected $code;
     protected $state;
     protected $redirectUri;
@@ -24,7 +26,7 @@ class AuthorizeCode
      */
     function getGrantType()
     {
-        return 'authorization_code';
+        return self::GRANT_TYPE;
     }
 
     /**

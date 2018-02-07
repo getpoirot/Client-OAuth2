@@ -9,6 +9,8 @@ class Implicit
     extends aGrantRequest
     implements iGrantAuthorizeRequest
 {
+    const GRANT_TYPE = 'implicit';
+
     protected $code;
     protected $state;
     protected $redirectUri;
@@ -22,7 +24,7 @@ class Implicit
      */
     function getGrantType()
     {
-        return 'implicit';
+        return self::GRANT_TYPE;
     }
 
     /**

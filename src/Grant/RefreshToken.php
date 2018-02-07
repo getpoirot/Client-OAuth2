@@ -9,6 +9,8 @@ class RefreshToken
     extends aGrantRequest
     implements iGrantTokenRequest
 {
+    const GRANT_TYPE = 'refresh_token';
+
     protected $refreshToken;
     protected $clientSecret;
 
@@ -20,7 +22,7 @@ class RefreshToken
      */
     function getGrantType()
     {
-        return 'refresh_token';
+        return self::GRANT_TYPE;
     }
 
     /**

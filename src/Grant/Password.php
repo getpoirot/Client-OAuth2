@@ -9,6 +9,8 @@ class Password
     extends aGrantRequest
     implements iGrantTokenRequest
 {
+    const GRANT_TYPE = 'password';
+
     protected $username;
     protected $password;
     protected $clientSecret;
@@ -21,7 +23,7 @@ class Password
      */
     function getGrantType()
     {
-        return 'password';
+        return self::GRANT_TYPE;
     }
 
     /**
