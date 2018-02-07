@@ -18,7 +18,7 @@ class AuthorizeCode
 
 
     /**
-     * Grant identifier (client_cre// Options:dentials, password, ...)
+     * Grant identifier (client_credentials, password, ...)
      *
      * @return string
      */

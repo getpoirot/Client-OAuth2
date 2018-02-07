@@ -4,6 +4,7 @@ namespace Poirot\OAuth2Client\Grant;
 use Poirot\OAuth2Client\Interfaces\ipGrantRequest;
 use Poirot\Std\ConfigurableSetter;
 use Poirot\Std\Hydrator\HydrateGetters;
+use Poirot\Std\Type\StdTravers;
 
 
 abstract class aGrantRequest
@@ -34,7 +35,7 @@ abstract class aGrantRequest
         $params = __( new HydrateGetters($this) )
             ->setExcludeNullValues();
 
-        $params = iterator_to_array($params);
+        $params = StdTravers::of($params)->toArray(null, true);
         return $params;
     }
 

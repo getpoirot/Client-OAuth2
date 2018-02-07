@@ -1,8 +1,9 @@
 <?php
 namespace Poirot\OAuth2Client\Interfaces;
 
-//use Poirot\ApiClient\Interfaces\Token\iAccessTokenObject;
+use Poirot\ApiClient\Interfaces\Token\iAccessTokenObject;
 use Poirot\OAuth2Client\Grant\aGrantRequest;
+use Poirot\Std\Struct\DataEntity;
 
 
 interface iClientOfOAuth
@@ -25,7 +26,7 @@ interface iClientOfOAuth
      *
      * @param iGrantTokenRequest $grant
      *
-     * @return iAccessTokenObject
+     * @return iAccessTokenObject|DataEntity
      * @throws \Exception
      */
     function attainAccessToken(iGrantTokenRequest $grant);

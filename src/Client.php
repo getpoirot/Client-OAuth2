@@ -15,6 +15,7 @@ use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
 use Poirot\OAuth2Client\Interfaces\iGrantAuthorizeRequest;
 use Poirot\OAuth2Client\Interfaces\iGrantTokenRequest;
 use Poirot\OAuth2Client\Interfaces\ipGrantRequest;
+use Poirot\Std\Struct\DataEntity;
 
 
 class Client
@@ -80,7 +81,7 @@ class Client
      *
      * @param iGrantTokenRequest $grant
      *
-     * @return iAccessTokenObject
+     * @return iAccessTokenObject|DataEntity
      * @throws \Exception
      */
     function attainAccessToken(iGrantTokenRequest $grant)
@@ -92,7 +93,14 @@ class Client
         if ( $ex = $response->hasException() )
             throw $ex;
 
+        /** @var DataEntity $r */
         $r = $response->expected();
+        if (! $r->get('access_token') )
+            // It not fulfilled with access_token; in case of two step validation like single-signin
+            // return response otherwise access token
+            return $r;
+
+
         return new AccessTokenObject($r);
     }
 
