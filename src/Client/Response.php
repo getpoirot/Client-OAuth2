@@ -5,6 +5,7 @@ use Poirot\ApiClient\Exceptions\exHttpResponse;
 use Poirot\ApiClient\Response\ExpectedJson;
 use Poirot\ApiClient\ResponseOfClient;
 use Poirot\OAuth2Client\Exception\exIdentifierExists;
+use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
 use Poirot\OAuth2Client\Exception\exPasswordNotMatch;
 use Poirot\OAuth2Client\Exception\exServerError;
 use Poirot\OAuth2Client\Exception\exTokenMismatch;
@@ -44,25 +45,38 @@ class Response
             // Determine Known Errors ...
             $expected = $this->expected();
             if ($expected && $err = $expected->get('error') ) {
-                switch (@$err['state']) {
-                    case 'exUserNotFound':
-                        $this->exception = new exUserNotFound($err['message'], (int) $err['code']);
-                        break;
-                    case 'exOAuthAccessDenied':
-                        $this->exception = new exTokenMismatch($err['message'], (int) $err['code']);
-                        break;
-                    case 'exIdentifierExists':
-                        $this->exception = new exIdentifierExists($err['message'], (int) $err['code']);
-                        break;
-                    case 'exPasswordNotMatch':
-                        $this->exception = new exPasswordNotMatch($err['message'], (int) $err['code']);
-                        break;
-                    case 'exUnexpectedValue':
-                        $this->exception = new exUnexpectedValue($err['message'], (int) $err['code']);
-                        break;
-                    case 'exMessageMalformed':
-                        $this->exception = new exUnexpectedValue($err['message'], (int) $err['code']);
-                        break;
+
+                if ( is_string($err) )
+                {
+                    $description = $expected->get('description');
+                    switch ($err) {
+                        case 'access_denied':
+                            $this->exception = new exOAuthAccessDenied($description);
+                            break;
+                    }
+
+                } elseif (isset($err['state']))
+                {
+                    switch (@$err['state']) {
+                        case 'exUserNotFound':
+                            $this->exception = new exUserNotFound($err['message'], (int)$err['code']);
+                            break;
+                        case 'exOAuthAccessDenied':
+                            $this->exception = new exTokenMismatch($err['message'], (int)$err['code']);
+                            break;
+                        case 'exIdentifierExists':
+                            $this->exception = new exIdentifierExists($err['message'], (int)$err['code']);
+                            break;
+                        case 'exPasswordNotMatch':
+                            $this->exception = new exPasswordNotMatch($err['message'], (int)$err['code']);
+                            break;
+                        case 'exUnexpectedValue':
+                            $this->exception = new exUnexpectedValue($err['message'], (int)$err['code']);
+                            break;
+                        case 'exMessageMalformed':
+                            $this->exception = new exUnexpectedValue($err['message'], (int)$err['code']);
+                            break;
+                    }
                 }
             }
         }
