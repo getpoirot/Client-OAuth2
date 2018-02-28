@@ -48,9 +48,10 @@ class Response
 
                 if ( is_string($err) )
                 {
-                    $description = $expected->get('description');
                     switch ($err) {
                         case 'access_denied':
+                        case 'invalid_grant':
+                            $description = $expected->get('error_description');
                             $this->exception = new exOAuthAccessDenied($description);
                             break;
                     }
