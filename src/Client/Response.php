@@ -5,6 +5,7 @@ use Poirot\ApiClient\Exceptions\exHttpResponse;
 use Poirot\ApiClient\Response\ExpectedJson;
 use Poirot\ApiClient\ResponseOfClient;
 use Poirot\OAuth2Client\Exception\exIdentifierExists;
+use Poirot\OAuth2Client\Exception\exInvalidRequest;
 use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
 use Poirot\OAuth2Client\Exception\exPasswordNotMatch;
 use Poirot\OAuth2Client\Exception\exServerError;
@@ -53,6 +54,10 @@ class Response
                         case 'invalid_grant':
                             $description = $expected->get('error_description');
                             $this->exception = new exOAuthAccessDenied($description);
+                            break;
+                        case 'invalid_request':
+                            $description = $expected->get('error_description');
+                            $this->exception = new exInvalidRequest($description);
                             break;
                     }
 

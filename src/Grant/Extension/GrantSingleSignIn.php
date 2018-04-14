@@ -13,6 +13,8 @@ class GrantSingleSignIn
     const GRANT_TYPE = 'onetime_code';
 
     protected $mobile;
+    protected $authCode;
+    protected $validationCode;
     protected $clientSecret;
 
 
@@ -70,6 +72,9 @@ class GrantSingleSignIn
         return $this->clientSecret;
     }
 
+
+    // Auth Code
+
     /**
      * Set Mobile
      * @param mixed $mobile
@@ -84,5 +89,40 @@ class GrantSingleSignIn
     function getMobile()
     {
         return $this->mobile;
+    }
+
+
+    // Access Token
+
+    /**
+     * @return mixed
+     */
+    function getAuthCode()
+    {
+        return $this->authCode;
+    }
+
+    /**
+     * @param mixed $authCode
+     */
+    function setAuthCode($authCode)
+    {
+        $this->authCode = $authCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    function getValidationCode()
+    {
+        return $this->validationCode;
+    }
+
+    /**
+     * @param mixed $validationCode
+     */
+    function setValidationCode($validationCode)
+    {
+        $this->validationCode = $validationCode;
     }
 }

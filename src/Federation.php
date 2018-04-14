@@ -419,7 +419,14 @@ recall:
                 // Token revoked or mismatch
                 // Refresh Token
                 // TODO Handle Errors while retrieve token (delete cache)
-                $this->tokenProvider->exchangeToken();
+                try {
+                    $this->tokenProvider->exchangeToken();
+
+                } catch (\Exception $e) {
+                    // Exchange Not Implemented
+                }
+
+
                 $recall--;
 
                 goto recall;
