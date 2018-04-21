@@ -31,9 +31,9 @@ class PlatformRest
     {
         $serverUrl = $this->_getServerUrlEndpoints($command);
 
-        $authUrl = \Poirot\OAuth2Client\appendQuery(
+        $authUrl = \Poirot\Http\appendQuery(
             $serverUrl
-            , \Poirot\OAuth2Client\buildQueryString( iterator_to_array($command) )
+            , \Poirot\Http\buildQueryString( iterator_to_array($command) )
         );
 
         $response = new Response( $authUrl );

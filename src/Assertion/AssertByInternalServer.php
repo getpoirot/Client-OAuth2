@@ -41,12 +41,12 @@ class AssertByInternalServer
      */
     function assertToken($tokenStr)
     {
-        if (false === $tokenStr = $this->_accessTokens->findByIdentifier((string) $tokenStr))
+        if (false === $token = $this->_accessTokens->findByIdentifier((string) $tokenStr))
             throw new exOAuthAccessDenied;
 
 
         $accessToken = new AccessToken(
-            new HydrateGetters($tokenStr) );
+            new HydrateGetters($token) );
 
         return $accessToken;
     }
