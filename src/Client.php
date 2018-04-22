@@ -33,10 +33,9 @@ class Client
 
 
     /**
-     * // TODO Scopes not work when we request scopes return empty array
      * Client constructor.
      *
-     * @param string $serverUrl     Server base url http://172.17.0.1/auth
+     * @param string $serverUrl    Server base url http://172.17.0.1/auth
      * @param string $clientId     Client ID Given by OAuth Server
      * @param string $clientSecret Client Secret
      * @param array $defaultScopes Default scopes when request token

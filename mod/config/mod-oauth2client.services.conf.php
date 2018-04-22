@@ -40,7 +40,7 @@ return [
                 // returned value will inject into construct
                 'grant'  => new \Poirot\Ioc\instance(function () {
                     return \Module\OAuth2Client\Services::OAuthClient()
-                        ->withGrant(GrantPlugins::CLIENT_CREDENTIALS);
+                        ->withGrant(GrantPlugins::CLIENT_CREDENTIALS, ['scopes' => ['oauth']]);
                 }, [':late_binding' => true])
             ]
         ),
