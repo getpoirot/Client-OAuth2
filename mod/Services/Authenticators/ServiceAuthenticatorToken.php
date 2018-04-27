@@ -46,6 +46,17 @@ class ServiceAuthenticatorToken
             ->setTokenAssertion( \Module\OAuth2Client\Actions::AssertToken()->assertion() )
         ;
 
+        // In Cases That we request and token has no owner_identifier
+        // client_credentials token in example
+        //
+        /*
+        $authenticator = new Authenticator(
+            $tokenAuthIdentifier
+        );
+        */
+
+
+        // So I Disable This Here; this cause problem
         $authenticator = new Authenticator(
             new IdentifierWrapIdentityMap(
                 $tokenAuthIdentifier
