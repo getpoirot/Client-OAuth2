@@ -31,9 +31,9 @@ class PlatformRest
     {
         $serverUrl = $this->_getServerUrlEndpoints($command);
 
-        $authUrl = \Poirot\OAuth2Client\appendQuery(
+        $authUrl = \Poirot\Http\appendQuery(
             $serverUrl
-            , \Poirot\OAuth2Client\buildQueryString( iterator_to_array($command) )
+            , \Poirot\Http\buildQueryString( iterator_to_array($command) )
         );
 
         $response = new Response( $authUrl );
@@ -168,16 +168,21 @@ class PlatformRest
 
 
         # Send Post Request
-        $cResponse     = curl_exec($handle);
-        $cResponseCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
-        $cContentType  = curl_getinfo($handle, CURLINFO_CONTENT_TYPE);
+        list($cResponse, $cResponseCode, $cContentType) = \Poirot\Std\reTry(function () use ($handle, $method, $url){
+            $cResponse     = curl_exec($handle);
+            $cResponseCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+            $cContentType  = curl_getinfo($handle, CURLINFO_CONTENT_TYPE);
 
-        if ($curl_errno = curl_errno($handle)) {
-            // Connection Error
-            $curl_error = curl_error($handle);
-            $errorMessage = $curl_error.' '."When $method: $url";
-            throw new exConnection($errorMessage, $curl_errno);
-        }
+            if ($curl_errno = curl_errno($handle)) {
+                // Connection Error
+                $curl_error = curl_error($handle);
+                $errorMessage = $curl_errno.':'.$curl_error.' '."When $method: $url";
+                throw new exConnection($errorMessage, $curl_errno);
+            }
+
+            return [$cResponse, $cResponseCode, $cContentType];
+        }, 3);
+
 
         $exception = null;
         if (! ($cResponseCode >= 200 && $cResponseCode < 300) ) {
