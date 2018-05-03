@@ -268,6 +268,26 @@ class Federation
         return $r;
     }
 
+    /**
+     * Request For Identifier Validation
+     *
+     * @param mixed  $userId
+     * @param string $identifierName
+     *
+     * @return array
+     */
+    function validateUserIdentifier($userId, $identifierName)
+    {
+        $response = $this->call( new Command\Members\ValidateUserIdentifier($userId, $identifierName) );
+        if ( $ex = $response->hasException() )
+            throw $ex;
+
+
+        $r = $response->expected();
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
+        return $r;
+    }
+
 
     // Me : Token Owner Specific Endpoints
     // Token must given to an owner

@@ -3,6 +3,9 @@ namespace Poirot\OAuth2Client\Client\PlatformRest;
 
 
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
+use Poirot\OAuth2Client\Federation\Command\Members\Exists;
+use Poirot\OAuth2Client\Federation\Command\Members\ValidateUserIdentifier;
+use Poirot\OAuth2Client\Federation\Command\Members\Whois;
 use Poirot\OAuth2Client\Federation\Command\Recover\Validate;
 
 class ServerUrlEndpoints
@@ -69,21 +72,27 @@ class ServerUrlEndpoints
                 break;
 
             case 'recover::validate':
-                /** @var Validate $cmMethod */
+                /** @var Validate $command */
                 $params = iterator_to_array($command);
                 $base = 'recover/validate/'.$params['validation_code'];
                 break;
             case 'recover::resendcode':
-                /** @var Validate $cmMethod */
+                /** @var Validate $command */
                 $params = iterator_to_array($command);
                 $base = 'recover/validate/resend/'.$params['validation_code'].'/'.$params['identifier_type'];
                 break;
 
             case 'members::exists':
+                /** @var Exists $command */
                 $base = 'api/v1/members/exists';
                 break;
             case 'members::whois':
+                /** @var Whois $command */
                 $base = 'api/v1/members/whois';
+                break;
+            case 'members::validateuseridentifier':
+                /** @var ValidateUserIdentifier $command */
+                $base = 'api/v1/members/'.$command->getUserId().'/validate/'.$command->getIdentifier();
                 break;
 
             case 'me::accountinfo':

@@ -133,6 +133,24 @@ class PlatformRest
         return $response;
     }
 
+    /**
+     * @param Command\Members\ValidateUserIdentifier $command
+     * @return iResponse
+     */
+    protected function members_ValidateUserIdentifier(Command\Members\ValidateUserIdentifier $command)
+    {
+        $headers = [];
+
+        // Request With Client Credential
+        // As Authorization Header
+        $headers['Authorization'] = 'Bearer '. ( $command->getToken()->getAccessToken() );
+
+
+        $url = $this->_getServerUrlEndpoints($command);
+        $response = $this->_sendViaCurl('GET', $url, [], $headers);
+        return $response;
+    }
+
 
     /**
      * @param Command\Me\AccountInfo $command
