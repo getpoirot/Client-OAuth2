@@ -299,11 +299,17 @@ class Federation
      * $federation->getMyAccountInfo()
      * [/code]
      *
+     * @param array $options
+     *
      * @return array
      */
-    function getMyAccountInfo()
+    function getMyAccountInfo(array $options = null)
     {
-        $response = $this->call( new Command\Me\AccountInfo );
+        $cmd = new Command\Me\AccountInfo;
+        if ($options !== null)
+            $cmd->with($cmd::parseWith($options));
+
+        $response = $this->call( $cmd );
         if ( $ex = $response->hasException() )
             throw $ex;
 

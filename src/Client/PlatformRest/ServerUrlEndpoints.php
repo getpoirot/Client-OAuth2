@@ -3,6 +3,7 @@ namespace Poirot\OAuth2Client\Client\PlatformRest;
 
 
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
+use Poirot\OAuth2Client\Federation\Command\Me\AccountInfo;
 use Poirot\OAuth2Client\Federation\Command\Members\Exists;
 use Poirot\OAuth2Client\Federation\Command\Members\ValidateUserIdentifier;
 use Poirot\OAuth2Client\Federation\Command\Members\Whois;
@@ -96,7 +97,12 @@ class ServerUrlEndpoints
                 break;
 
             case 'me::accountinfo':
-                $base = 'api/v1/me/profile';
+                $postfix = '';
+                /** @var AccountInfo $command */
+                if ( $command->getIncludeGrants() )
+                    $postfix = '?grants';
+
+                $base = 'api/v1/me/profile'.$postfix;
                 break;
             case 'me::changepassword':
                 $base = 'api/v1/me/grants/password';
