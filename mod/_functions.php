@@ -2,21 +2,21 @@
 namespace Module\OAuth2Client\Assertion
 {
     use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
-    use Poirot\OAuth2Client\Interfaces\iAccessToken;
+    use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
 
 
     /**
      * Validate Asserted Token Entity (Retrieved From Server),
      * against given condition
      *
-     * @param iAccessToken|null $token
+     * @param iAccessTokenEntity|null $token
      * @param object            $tokenCondition
      *
      * @throws exOAuthAccessDenied
      */
     function validateAccessToken($token = null, $tokenCondition)
     {
-        if (! $token instanceof iAccessToken ) {
+        if (! $token instanceof iAccessTokenEntity ) {
             if ($token === null)
                 throw new exOAuthAccessDenied('Token has to be send.');
 
@@ -42,7 +42,7 @@ namespace Module\OAuth2Client\Assertion
 
     function funValidateAccessToken($tokenCondition)
     {
-        return function (iAccessToken $token = null) use ($tokenCondition) {
+        return function (iAccessTokenEntity $token = null) use ($tokenCondition) {
             validateAccessToken($token, $tokenCondition);
         };
     }

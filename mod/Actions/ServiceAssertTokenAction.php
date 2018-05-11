@@ -5,7 +5,7 @@ use Poirot\Ioc\Container\Service\aServiceContainer;
 use Poirot\OAuth2Client\Assertion\aAssertToken;
 use Poirot\OAuth2Client\Assertion\AssertByInternalServer;
 use Poirot\OAuth2Client\Assertion\AssertByRemoteServer;
-use Poirot\OAuth2Client\Interfaces\iAccessToken;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
 
 
 class ServiceAssertTokenAction
@@ -60,7 +60,7 @@ class ServiceAssertTokenAction
     }
 
     /**
-     * @param iAccessToken|array $debugToken Array allow config files
+     * @param iAccessTokenEntity|array $debugToken Array allow config files
      */
     function setDebugToken($debugToken)
     {

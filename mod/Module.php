@@ -117,13 +117,13 @@ class Module implements Sapi\iSapiModule
 }
 
     use Poirot\OAuth2Client\Federation;
-    use Poirot\OAuth2Client\Interfaces\iAccessToken;
+    use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
     use Psr\Http\Message\ServerRequestInterface;
 
     /**
      * @property ServiceAssertTokenAction $AssertToken
      *
-     * @method static iAccessToken|null|AssertTokenAction AssertToken(ServerRequestInterface $HttpRequestPsr = null)
+     * @method static iAccessTokenEntity|null|AssertTokenAction AssertToken(ServerRequestInterface $HttpRequestPsr = null)
      */
     class Actions extends \IOC
     { }

@@ -2,7 +2,7 @@
 namespace Poirot\OAuth2Client\Assertion;
 
 use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
-use Poirot\OAuth2Client\Interfaces\iAccessToken;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
 use Psr\Http\Message\ServerRequestInterface;
 
 
@@ -20,7 +20,7 @@ abstract class aAssertToken
      *
      * @param string $tokenStr
      *
-     * @return iAccessToken
+     * @return iAccessTokenEntity
      * @throws exOAuthAccessDenied Access Denied
      */
     abstract function assertToken($tokenStr);

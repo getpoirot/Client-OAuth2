@@ -1,13 +1,13 @@
 <?php
 namespace Poirot\OAuth2Client\Model\Entity;
 
-use Poirot\OAuth2Client\Interfaces\iAccessToken;
 use Poirot\Std\Struct\DataOptionsOpen;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
 
 
-class AccessToken 
+class AccessTokenEntity
     extends DataOptionsOpen
-    implements iAccessToken
+    implements iAccessTokenEntity
 {
     protected $identifier;
     protected $clientIdentifier;

@@ -1,8 +1,8 @@
 <?php
 namespace Module\OAuth2Client\Actions;
 
-use Poirot\OAuth2Client\Interfaces\iAccessToken;
-use Poirot\OAuth2Client\Model\Entity\AccessToken;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
+use Poirot\OAuth2Client\Model\Entity\AccessTokenEntity;
 
 
 class AssertDebugTokenAction
@@ -10,12 +10,12 @@ class AssertDebugTokenAction
     /**
      * AssertTokenDebug constructor.
      *
-     * @param array|iAccessToken $token
+     * @param array|iAccessTokenEntity $token
      */
     function __construct($token)
     {
-        if (! $token instanceof iAccessToken )
-            $token = new AccessToken($token);
+        if (! $token instanceof iAccessTokenEntity )
+            $token = new AccessTokenEntity($token);
 
         $this->token = $token;
     }
@@ -23,7 +23,7 @@ class AssertDebugTokenAction
     /**
      * Assert Authorization Token From Request
      *
-     * @return iAccessToken[]
+     * @return iAccessTokenEntity[]
      */
     function __invoke()
     {

@@ -1,11 +1,12 @@
 <?php
 namespace Poirot\OAuth2Client\Interfaces;
 
+
 /**
  * - Access Token Can Be Stateless
  */
 
-interface iAccessToken
+interface iAccessTokenEntity
 {
     /**
      * Token Identifier

@@ -3,7 +3,7 @@ namespace Module\OAuth2Client\Actions;
 
 use Poirot\OAuth2Client\Assertion\aAssertToken;
 use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
-use Poirot\OAuth2Client\Interfaces\iAccessToken;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
 use Psr\Http\Message\ServerRequestInterface;
 
 
@@ -32,7 +32,7 @@ class AssertTokenAction
      *
      * @param ServerRequestInterface $HttpRequestPsr
      *
-     * @return iAccessToken|null
+     * @return iAccessTokenEntity|null
      */
     function __invoke(ServerRequestInterface $HttpRequestPsr = null)
     {

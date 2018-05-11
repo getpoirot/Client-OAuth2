@@ -2,8 +2,8 @@
 namespace Poirot\OAuth2Client\Assertion;
 
 use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
-use Poirot\OAuth2Client\Interfaces\iAccessToken;
-use Poirot\OAuth2Client\Model\Entity\AccessToken;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
+use Poirot\OAuth2Client\Model\Entity\AccessTokenEntity;
 use Poirot\Std\Hydrator\HydrateGetters;
 
 
@@ -36,7 +36,7 @@ class AssertByInternalServer
      *
      * @param string $tokenStr
      *
-     * @return iAccessToken
+     * @return iAccessTokenEntity
      * @throws exOAuthAccessDenied Access Denied
      */
     function assertToken($tokenStr)
@@ -45,7 +45,7 @@ class AssertByInternalServer
             throw new exOAuthAccessDenied;
 
 
-        $accessToken = new AccessToken(
+        $accessToken = new AccessTokenEntity(
             new HydrateGetters($token) );
 
         return $accessToken;

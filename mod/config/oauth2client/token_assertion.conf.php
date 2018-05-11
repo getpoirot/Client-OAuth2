@@ -1,10 +1,10 @@
 <?php
-use Poirot\OAuth2Client\Model\Entity\AccessToken;
+use Poirot\OAuth2Client\Model\Entity\AccessTokenEntity;
 
 return [
     // Not Connect to OAuth Server and Used Asserted Token With OwnerObject Below
     'debug_mode'  => true,
-    'debug_token' => new AccessToken([
+    'debug_token' => new AccessTokenEntity([
         /** @see \Poirot\OAuth2Client\Model\Entity\AccessToken */
         'client_identifier' => 'test',
         'owner_identifier'  => 'test',

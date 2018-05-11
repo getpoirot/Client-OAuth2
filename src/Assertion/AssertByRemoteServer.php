@@ -4,9 +4,9 @@ namespace Poirot\OAuth2Client\Assertion;
 use Poirot\ApiClient\Exceptions\exConnection;
 use Poirot\OAuth2Client\Assertion\RemoteServer\GrantExtension;
 use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
-use Poirot\OAuth2Client\Interfaces\iAccessToken;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
 use Poirot\OAuth2Client\Interfaces\iClientOfOAuth;
-use Poirot\OAuth2Client\Model\Entity\AccessToken;
+use Poirot\OAuth2Client\Model\Entity\AccessTokenEntity;
 use Poirot\Std\Hydrator\HydrateGetters;
 
 
@@ -56,7 +56,7 @@ class AssertByRemoteServer
      *
      * @param string $tokenStr
      *
-     * @return iAccessToken
+     * @return iAccessTokenEntity
      * @throws exOAuthAccessDenied Access Denied
      */
     function assertToken($tokenStr)
@@ -93,7 +93,7 @@ class AssertByRemoteServer
          * ]
          */
 
-        $tokenEntity = new AccessToken;
+        $tokenEntity = new AccessTokenEntity;
         $tokenEntity
             ->setIdentifier($tokenStr)
             ->setDateTimeExpiration( $tokenObject->getDateTimeExpiration() )
