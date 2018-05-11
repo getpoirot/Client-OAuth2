@@ -1,12 +1,12 @@
 <?php
 namespace Module\OAuth2Client\Authenticate;
 
+use Poirot\ApiClient\AccessTokenObject;
 use Poirot\AuthSystem\Authenticate\Identifier\aIdentifierHttp;
 use Poirot\AuthSystem\Authenticate\Interfaces\iIdentity;
 use Poirot\Http\Psr\ServerRequestBridgeInPsr;
 use Poirot\OAuth2Client\Assertion\aAssertToken;
 use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
-use Poirot\Std\Hydrator\HydrateGetters;
 
 
 class IdentifierHttpToken
@@ -15,6 +15,7 @@ class IdentifierHttpToken
     /** @var aAssertToken */
     protected $assertion;
     protected $_c_parsedToken;
+
 
     /**
      * Can Recognize Identity?
@@ -53,7 +54,16 @@ class IdentifierHttpToken
         {
             if ($token) {
                 $itoken = $this->assertion->assertToken($token);
-                $token  = new IdentityOAuthToken( new HydrateGetters($itoken) );
+                $token  = new IdentityOAuthToken([
+                    'owner_id'     => $itoken->getOwnerIdentifier(),
+                    'access_token' => new AccessTokenObject([
+                        'access_token'        => $itoken->getIdentifier(),
+                        'client_id'           => $itoken->getClientIdentifier(),
+                        'datetime_expiration' => $itoken->getDateTimeExpiration(),
+                        'scopes'              => $itoken->getScopes(),
+                    ]),
+                    'meta_data' => [],
+                ]);
             }
 
         } catch (exOAuthAccessDenied $e) {
