@@ -26,7 +26,7 @@ class IdentityOAuthToken
      *
      * @return $this
      */
-    function setAccessToken(iAccessTokenObject $accToken)
+    function setAccessToken(iAccessTokenObject $accToken = null)
     {
         $this->accessToken = $accToken;
         return $this;
