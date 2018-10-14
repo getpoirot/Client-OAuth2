@@ -329,19 +329,25 @@ class Federation
      * }
      * [/code]
      *
-     * @param $newPassword
-     * @param $currentPassword
+     * @param string      $newPassword
+     * @param string|null $currentPassword
      *
      * @return bool
      * @throws exPasswordNotMatch
      */
-    function changeMyPassword($newPassword, $currentPassword)
+    function changeMyPassword($newPassword, $currentPassword = null)
     {
         $response = $this->call( new Command\Me\ChangePassword($newPassword, $currentPassword) );
         if ( $ex = $response->hasException() )
             throw $ex;
 
-        return true;
+
+        if ($currentPassword !== null)
+            return true;
+
+        $r = $response->expected();
+        $r = ($r instanceof iDataEntity) ? $r->get('result') : $r;
+        return $r;
     }
 
     /**

@@ -75,7 +75,7 @@ class ServerUrlEndpoints
             case 'recover::validate':
                 /** @var Validate $command */
                 $params = iterator_to_array($command);
-                $base = 'recover/validate/'.$params['validation_code'];
+                $base = 'api/v1/me/identifiers/change/confirm/'.$params['validation_code'];
                 break;
             case 'recover::resendcode':
                 /** @var Validate $command */
