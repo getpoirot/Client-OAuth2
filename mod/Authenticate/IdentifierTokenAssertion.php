@@ -49,21 +49,26 @@ class IdentifierTokenAssertion
     /**
      * Retrieve User Info From OAuth Server
      *
+     * @param bool $grants
+     *
      * @return array
      */
-    function getAuthInfo()
+    function getAuthInfo($grants = false)
     {
         if ($this->_c_info)
             return $this->_c_info;
 
-        try
-        {
-            $info = $this->federation()->getMyAccountInfo();
+
+        $options = null;
+        if ( $grants )
+            $options['include_grants'] = true;
+
+        try {
+            $info = $this->federation()->getMyAccountInfo($options);
 
         } catch (exOAuthAccessDenied $e) {
             throw new exAccessDenied($e->getMessage(), $e->getCode(), $e);
         }
-
 
         return $this->_c_info = $info;
     }
