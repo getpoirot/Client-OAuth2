@@ -22,12 +22,15 @@ class ChangePassword
      * @param $newPass
      * @param $currPass
      */
-    function __construct($newPass, $currPass)
+    function __construct($newPass, $currPass = null)
     {
-        $this->val = [
+        $v = [
             'newpass'  => $newPass,
-            'currpass' => $currPass
         ];
+
+        ($currPass === null) ?: $v['currpass'] = $currPass;
+
+        $this->val = $v;
     }
 
     /**
