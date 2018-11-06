@@ -47,9 +47,12 @@ namespace Module\OAuth2Client\Assertion
             ) {
                 $tokenScopes = $token->getScopes();
                 $reqScopes   = $tokenCondition->scopes;
+                if (! is_array($reqScopes) )
+                    throw new \InvalidArgumentException(sprintf(
+                        'Scopes must be array; given: (%s).'
+                        , \Poirot\Std\flatten($reqScopes)
+                    ));
 
-
-                $t = microtime(true);
 
                 // Sort token scopes to achieve better finding performance
                 //
