@@ -1,7 +1,9 @@
 <?php
 namespace Module\OAuth2Client\Assertion
 {
+    use Poirot\ApiClient\Interfaces\Token\iAccessTokenObject;
     use Poirot\OAuth2Client\Exception\exOAuthAccessDenied;
+    use Poirot\OAuth2Client\Exception\exOAuthScopeRequired;
     use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
 
 
@@ -16,7 +18,7 @@ namespace Module\OAuth2Client\Assertion
      */
     function validateAccessToken($token = null, $tokenCondition)
     {
-        if (! $token instanceof iAccessTokenEntity ) {
+        if ( !$token instanceof iAccessTokenEntity && !$token instanceof iAccessTokenObject) {
             if ($token === null)
                 throw new exOAuthAccessDenied('Token has to be send.');
 
@@ -24,18 +26,62 @@ namespace Module\OAuth2Client\Assertion
         }
 
 
-        if ($tokenCondition) {
-            # Check Resource Owner
-            if ( $tokenCondition->mustHaveOwner && empty($token->getOwnerIdentifier()) )
+        if ($tokenCondition)
+        {
+            ## Check Have Resource Owner
+            #
+            $owner = $token->getOwnerIdentifier();
+            if (
+                isset($tokenCondition->mustHaveOwner)
+                && $tokenCondition->mustHaveOwner
+                && empty($owner)
+            )
                 throw new exOAuthAccessDenied('Token Not Granted To Resource Owner; But Have To.');
 
-            # Check Scopes
-            if (! empty($tokenCondition->scopes) ) {
-                /**
-                 * TODO check scopes
-                 * @link https://github.com/phPoirot/Client-OAuth2/issues/1
-                 */
-                kd(array_intersect($tokenCondition->scopes, $token->getScopes()));
+
+            ## Check Scopes Validity
+            #
+            if (
+                isset($tokenCondition->scopes)
+                && ! empty($tokenCondition->scopes)
+            ) {
+                $tokenScopes = $token->getScopes();
+                $reqScopes   = $tokenCondition->scopes;
+                if (! is_array($reqScopes) )
+                    throw new \InvalidArgumentException(sprintf(
+                        'Scopes must be array; given: (%s).'
+                        , \Poirot\Std\flatten($reqScopes)
+                    ));
+
+
+                // Sort token scopes to achieve better finding performance
+                //
+                ksort($tokenScopes);
+                $tScopeSorted = [];
+                foreach ($tokenScopes as $scope) {
+                    $tChr = strtolower($scope[0]);
+                    if (! isset($tScopeSorted[$tChr]) )
+                        $tScopeSorted[$tChr] = [];
+
+                    $tScopeSorted[$tChr][] = $scope;
+                }
+
+                // Check for require scope
+                //
+                foreach ($reqScopes as $rScope)
+                {
+                    $tChr = strtolower($rScope[0]);
+                    if (! isset($tScopeSorted[$tChr]) )
+                        break;
+
+                    foreach ($tScopeSorted[$tChr] as $ts) {
+                        if ( false !== strstr($ts, $rScope) )
+                            return;
+                    }
+                }
+
+
+                throw new exOAuthScopeRequired('Scope Needed But Not Fulfilled By Token.');
             }
         }
     };
