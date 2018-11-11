@@ -10,6 +10,7 @@ use Poirot\OAuth2Client\Exception\exResponseError;
 use Poirot\Std\Type\StdArray;
 
 
+// TODO using http wrapper to send data
 class PlatformRest
     extends aOAuthPlatform
 {
@@ -181,7 +182,7 @@ class PlatformRest
             }
 
             return [$cResponse, $cResponseCode, $cContentType];
-        }, 3);
+        }, 300);
 
 
         $exception = null;
