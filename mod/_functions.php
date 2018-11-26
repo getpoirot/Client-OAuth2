@@ -14,7 +14,7 @@ namespace Module\OAuth2Client\Assertion
      * @param iAccessTokenEntity|null $token
      * @param object            $tokenCondition
      *
-     * @throws exOAuthAccessDenied
+     * @throws exOAuthAccessDenied|\Exception
      */
     function validateAccessToken($token = null, $tokenCondition)
     {
@@ -30,7 +30,11 @@ namespace Module\OAuth2Client\Assertion
         {
             ## Check Have Resource Owner
             #
-            $owner = $token->getOwnerIdentifier();
+            if ($token instanceof iAccessTokenEntity)
+                $owner = $token->getOwnerIdentifier();
+            else
+                throw new \Exception('Access Token Missing.');
+
             if (
                 isset($tokenCondition->mustHaveOwner)
                 && $tokenCondition->mustHaveOwner
@@ -81,7 +85,10 @@ namespace Module\OAuth2Client\Assertion
                 }
 
 
-                throw new exOAuthScopeRequired('Scope Needed But Not Fulfilled By Token.');
+                throw new exOAuthScopeRequired(sprintf(
+                    'Scopes: (%s) Needed But Not Fulfilled By Token.'
+                    , implode(' ', $tokenCondition->scopes)
+                ));
             }
         }
     };

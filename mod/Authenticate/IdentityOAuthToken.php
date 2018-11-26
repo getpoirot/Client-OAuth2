@@ -7,6 +7,7 @@ use Poirot\AuthSystem\Authenticate\Interfaces\Identity\iIdentityAccTokenAware;
 use Poirot\AuthSystem\Authenticate\Interfaces\iIdentity;
 use Poirot\AuthSystem\Authenticate\Interfaces\iIdentityOfUser;
 use Poirot\AuthSystem\Authenticate\Interfaces\Identity\iIdentityAccTokenProvider;
+use Poirot\OAuth2Client\Interfaces\iAccessTokenEntity;
 
 
 class IdentityOAuthToken
@@ -17,6 +18,7 @@ class IdentityOAuthToken
     , iIdentityAccTokenAware
 {
     protected $accessToken;
+    protected $assertTokenEntity;
 
 
     /**
@@ -40,5 +42,23 @@ class IdentityOAuthToken
     function getAccessToken()
     {
         return $this->accessToken;
+    }
+
+    /**
+     * @return mixed
+     */
+    function getAssertTokenEntity()
+    {
+        return $this->assertTokenEntity;
+    }
+
+    /**
+     * @param iAccessTokenEntity $assertTokenEntity
+     * @return $this
+     */
+    function setAssertTokenEntity($assertTokenEntity)
+    {
+        $this->assertTokenEntity = $assertTokenEntity;
+        return $this;
     }
 }
