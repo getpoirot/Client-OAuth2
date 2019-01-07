@@ -56,6 +56,7 @@ class IdentifierHttpToken
                 $itoken = $this->assertion->assertToken($token);
                 $token  = new IdentityOAuthToken([
                     'owner_id'     => $itoken->getOwnerIdentifier(),
+                    'assert_token_entity' => $itoken,
                     'access_token' => new AccessTokenObject([
                         'access_token'        => $itoken->getIdentifier(),
                         'client_id'           => $itoken->getClientIdentifier(),
