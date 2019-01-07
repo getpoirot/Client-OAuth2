@@ -123,6 +123,8 @@ class Module implements Sapi\iSapiModule
     /**
      * @property ServiceAssertTokenAction $AssertToken
      *
+     * .................................................................................................................
+     * @see AssertTokenAction
      * @method static iAccessTokenEntity|null|AssertTokenAction AssertToken(ServerRequestInterface $HttpRequestPsr = null)
      */
     class Actions extends \IOC
